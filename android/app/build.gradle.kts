@@ -11,8 +11,12 @@ android {
         applicationId = "com.pebblephonefinder.android"
         minSdk = 26
         targetSdk = 36
+        // Versioning scheme: debug builds use a 0.x.y series (bump minor on
+        // every new debug build we ship, e.g. 0.1.0 -> 0.2.0). The first
+        // real release build starts a fresh series at 1.0.0, independent of
+        // wherever the debug series was left. See release/README.md.
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1.0-debug"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
