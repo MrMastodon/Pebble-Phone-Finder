@@ -1,11 +1,32 @@
 # Pebble Phone Finder
 
+> **⚠️ Vibe-coded project.** Every line of code, config, and this README was
+> written by an AI coding assistant (Claude) from a conversational prompt, not
+> by an experienced Pebble or Android developer reviewing each decision by
+> hand. It builds and passes the checks described below, but it has **not**
+> been installed or exercised on real watch/phone hardware by a human. Read
+> it, review it, and test it yourself before you trust it with anything —
+> especially the prebuilt binaries in `release/`.
+>
+> *(Norsk: Dette er et "vibe-kodet" prosjekt — all kode og konfigurasjon her
+> er skrevet av en KI-assistent (Claude) ut fra en samtale, ikke av en
+> erfaren Pebble- eller Android-utvikler som har gått gjennom hver linje.
+> Det bygger og består testene beskrevet under, men er ikke installert eller
+> utprøvd på ekte klokke/telefon av et menneske. Les, vurder og test selv før
+> du stoler på det — særlig de ferdigbygde filene i `release/`.)*
+
 A "Find My Phone" pair for the Pebble Time 2 (sold today as **Core Time 2** by
 Core Devices): a one-button watch app plus an Android companion app that
 plays a loud, looping alarm on the phone **regardless of the phone's volume
 or silent-mode setting** — unlike existing Pebble find-my-phone watchapps,
 which just play a media-stream sound at whatever the media volume happens to
 be.
+
+## Prebuilt binaries
+
+Don't want to set up the Pebble SDK or an Android build environment? Ready
+built artifacts (a `.pbw` for the watch, a debug `.apk` for the phone) are in
+[`release/`](release/), with checksums and install instructions.
 
 ## How it works
 
@@ -116,4 +137,5 @@ watch, phone, and the official Pebble app; see Known limitations below.
 docs/PROTOCOL.md   Shared UUID + AppMessage key/value contract
 watch/              Pebble C watchapp (pebble-tool project, emery only)
 android/            Android companion app (Gradle project)
+release/            Prebuilt .pbw / .apk, with checksums (see release/README.md)
 ```
