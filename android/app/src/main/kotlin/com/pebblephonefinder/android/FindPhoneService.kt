@@ -86,7 +86,12 @@ class FindPhoneService : Service() {
             "FindMyPhoneCompanion:AlarmWakeLock"
         ).apply {
             setReferenceCounted(false)
-            acquire(10 * 60 * 1000L /* 10 min safety timeout */)
+            // Safety cap only, in case stop() is somehow never reached (the
+            // OS also auto-releases this if this process dies). Deliberately
+            // long: the alarm is meant to keep sounding until the user finds
+            // the phone or explicitly stops it (watch button or notification
+            // Stop button), so a short cutoff here would silently defeat that.
+            acquire(30 * 60 * 1000L)
         }
     }
 

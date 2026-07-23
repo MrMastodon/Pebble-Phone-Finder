@@ -45,6 +45,31 @@ built artifacts (a `.pbw` for the watch, a debug `.apk` for the phone) are in
 
 See `docs/PROTOCOL.md` for the exact shared UUID and AppMessage key/values.
 
+### Does the companion app need to stay running in the background?
+
+No — it's event-driven, not an always-on background service. `PebbleListenerService`
+is a plain manifest-declared service; the official Pebble app (which is the
+one holding the persistent Bluetooth connection) starts it via an explicit
+Intent only when a message actually arrives, the same way FCM wakes an app
+for a push notification even if that app isn't currently running. Nothing in
+this project needs to run 24/7 waiting for a button press.
+
+Only once a `START` command actually arrives does `FindPhoneService` promote
+itself to a real foreground service (persistent notification + wake lock),
+and only for as long as the alarm needs to keep sounding.
+
+The two things that *can* break this, neither of which this app can work
+around from inside itself:
+- **Force-stopping the app** from Android's app settings. This is an OS-level
+  restriction that blocks *any* component (services, receivers) from being
+  started again until the user manually reopens the app — it applies to
+  every Android app, not something specific to how this one is built.
+- **Aggressive OEM battery managers** (Xiaomi/MIUI, Huawei, some Samsung
+  models, etc.) that go beyond stock Android and can treat a swiped-away or
+  long-unused app as if it were force-stopped. If the alarm doesn't reliably
+  fire, check that app's battery/autostart settings and allow it to run
+  unrestricted in the background.
+
 ## Prerequisites
 
 - A Pebble Time 2 / Core Time 2 paired with an Android phone running the
@@ -122,10 +147,15 @@ watch, phone, and the official Pebble app; see Known limitations below.
   cannot bypass without you separately granting it Notification Policy
   Access — it is not something a normal app can silently override, and this
   project doesn't try to.
-- **Battery optimization**: some Android OEM skins (Samsung, Xiaomi, etc.)
-  are aggressive about killing background services. If the alarm doesn't
-  reliably sound, exempt this app from battery optimization in system
-  settings.
+- **Battery optimization / OEM restrictions** — see "Does the companion app
+  need to stay running in the background?" above.
+- **Wake lock safety cap**: `FindPhoneService` holds its wake lock for up to
+  30 minutes as a fallback in case `stop()` is somehow never reached (it's
+  also auto-released by the OS if the process dies) — the alarm is meant to
+  keep sounding until you stop it via the watch button or the notification's
+  Stop button, not to time out on its own, but if you legitimately need it
+  to ring longer than 30 minutes unattended, that cap needs raising in
+  `FindPhoneService.kt`.
 - **Manual sync required** between `watch/package.json` and
   `android/app/src/main/kotlin/com/pebblephonefinder/android/Protocol.kt` —
   there's no shared build step linking the two projects, only the

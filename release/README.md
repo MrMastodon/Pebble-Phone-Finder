@@ -15,7 +15,7 @@ to everything here.
 
 ```
 7657f8c57988fd969af77b484382a7be8ca56f8f1684f485690d7b9fe208445e  find-my-phone-watch-v1.0.0.pbw
-a22db889acfd888cc0b3877400ca170471308e19c50065c507c1ffe392173b62  find-my-phone-companion-v1.0.0-debug.apk
+73627ed1aad8fe6617c2f3db7ef434bb36d2df020c38ae12b9a4e8f35d219127  find-my-phone-companion-v1.0.0-debug.apk
 ```
 
 Both were built and verified in this repo's CI-less sandbox environment
