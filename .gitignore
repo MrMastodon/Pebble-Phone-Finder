@@ -1,0 +1,25 @@
+# Pebble watch app (pebble-tool / waf)
+watch/build/
+watch/node_modules/
+watch/.pebble-cache/
+watch/*.pbw
+watch/.lock-waf_linux_build
+
+# Android / Gradle
+android/local.properties
+android/.gradle/
+android/.kotlin/
+android/build/
+android/app/build/
+android/*/build/
+android/.idea/
+android/*.iml
+android/captures/
+android/.cxx/
+android/*.apk
+android/*.aab
+
+# Editors / OS
+.vscode/
+.DS_Store
+*.swp

@@ -1,0 +1,34 @@
+{
+  "name": "find-my-phone",
+  "author": "MrMastodon",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Find My Phone",
+    "uuid": "2cec5357-9346-45f1-926e-2af0b79cb149",
+    "sdkVersion": "3",
+    "targetPlatforms": [
+      "emery"
+    ],
+    "watchapp": {
+      "watchface": false
+    },
+    "messageKeys": {
+      "COMMAND": 0
+    },
+    "resources": {
+      "media": []
+    },
+    "companionApp": {
+      "android": {
+        "apps": [
+          {
+            "package": "com.pebblephonefinder.android"
+          }
+        ]
+      }
+    }
+  }
+}
