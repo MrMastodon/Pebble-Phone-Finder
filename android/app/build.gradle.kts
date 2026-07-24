@@ -15,8 +15,8 @@ android {
         // every new debug build we ship, e.g. 0.1.0 -> 0.2.0). The first
         // real release build starts a fresh series at 1.0.0, independent of
         // wherever the debug series was left. See release/README.md.
-        versionCode = 4
-        versionName = "0.4.0-debug"
+        versionCode = 5
+        versionName = "0.5.0-debug"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

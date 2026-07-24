@@ -18,28 +18,33 @@ to everything here.
   debug-keystore build) start a fresh series at `1.0.0`, independent of
   wherever the debug series was left off.
 
-## Current build: `0.4.0-debug`
+## Current build: `0.5.0-debug`
 
 | File | What it is | Install with |
 |------|------------|---------------|
-| `find-my-phone-watch-v0.4.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.4.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
-| `find-my-phone-companion-v0.4.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.4.0-debug.apk` |
+| `find-my-phone-watch-v0.5.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.5.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
+| `find-my-phone-companion-v0.5.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.5.0-debug.apk` |
 
-`0.4.0-debug` is a UI/polish pass now that the core round trip works
-end to end (confirmed on real hardware with `0.3.0-debug`):
-- Watch: bigger status text, a 25x25 app icon (shown both in the watch's
-  app launcher list and, since this app isn't published through an
-  appstore, in the phone's list of installed watchapps too — see
-  `watch/resources/images/icon.png`), and an orange arrow drawn at
-  SELECT-button height pointing at it.
-- Phone: the diagnostics panel added in `0.2.0-debug` is now hidden by
-  default behind a "Show diagnostics" button instead of always visible.
+`0.5.0-debug`:
+- Watch icon (`watch/resources/images/icon.png`) now has a solid opaque
+  background instead of a transparent one — a transparent PNG background
+  can render as blank in some UIs, and it's a more typical style for
+  color-platform icons regardless. If the phone's installed-apps overview
+  is still blank after a clean reinstall, that's likely a limitation of
+  the current Pebble mobile app version for non-appstore-published
+  (sideloaded) apps, not something fixable from this project's side — see
+  the root README.
+- Both apps now auto-detect Norwegian (Bokmål) as the system
+  language and show Norwegian text instead of English when it is: the
+  watch via a runtime `i18n_get_system_locale()` check, the phone via a
+  standard Android `values-nb` resource set. English remains the
+  fallback in every other locale.
 
 ### SHA-256 checksums
 
 ```
-d14da662822a077cfba6c177bdcbb26f6f5a5492349a4fccd408804eddf97aa3  find-my-phone-watch-v0.4.0-debug.pbw
-71133beb4f1f942fd920359f22003b8f1365640618ac64a48459721fe3a06068  find-my-phone-companion-v0.4.0-debug.apk
+f41f4b419a8f983428fc238fcf3f9419b1d860f369ac4e2a0c940014978e6d98  find-my-phone-watch-v0.5.0-debug.pbw
+4775635c7071c9caaf81bb144876a3a50dbcdcaaf31b10b83bb059d34b2881b7  find-my-phone-companion-v0.5.0-debug.apk
 ```
 
 Both were built and verified in this repo's CI-less sandbox environment

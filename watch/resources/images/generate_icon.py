@@ -10,20 +10,26 @@ size = 25
 img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
 d = ImageDraw.Draw(img)
 
-phone_color = (40, 40, 45, 255)
-screen_color = (235, 235, 240, 255)
-accent_color = (255, 149, 0, 255)
+bg_color = (28, 32, 44, 255)       # solid dark navy background (opaque)
+phone_color = (235, 235, 240, 255)
+screen_color = (28, 32, 44, 255)
+accent_color = (255, 149, 0, 255)  # orange "alarm" accent
 
-# Phone silhouette, shifted slightly left/down to leave clear room top-right
-# for the sound-wave ticks.
-d.rounded_rectangle([3, 5, 14, 23], radius=2, fill=phone_color)
-d.rounded_rectangle([4, 7, 13, 19], radius=1, fill=screen_color)
-d.ellipse([7, 20, 10, 23], fill=(20, 20, 24, 255))
+# Full opaque background square: some renderers don't composite a
+# transparent PNG background correctly, which can show up as an empty/blank
+# icon - an opaque background is also just the more common style for
+# small color-platform app icons.
+d.rounded_rectangle([0, 0, size - 1, size - 1], radius=4, fill=bg_color)
+
+# Phone silhouette in a light color for contrast against the dark background.
+d.rounded_rectangle([6, 4, 17, 21], radius=2, fill=phone_color)
+d.rounded_rectangle([7, 6, 16, 17], radius=1, fill=screen_color)
+d.ellipse([10, 18, 13, 21], fill=phone_color)
 
 # Sound wave ticks radiating from the phone's top-right corner (a "ringing"
 # glyph) - short diagonal strokes read more clearly than arcs at 25px.
-d.line([17, 6, 20, 3], fill=accent_color, width=2)
-d.line([19, 10, 23, 8], fill=accent_color, width=2)
-d.line([16, 2, 18, 0], fill=accent_color, width=2)
+d.line([18, 5, 21, 2], fill=accent_color, width=2)
+d.line([20, 9, 24, 7], fill=accent_color, width=2)
+d.line([17, 1, 19, -1], fill=accent_color, width=2)
 
 img.save("icon.png")

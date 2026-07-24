@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include <string.h>
 
 #define COMMAND_STOP 0
 #define COMMAND_START 1
@@ -16,25 +17,34 @@ static TextLayer *s_status_layer;
 static Layer *s_select_arrow_layer;
 
 static AppState s_state = STATE_IDLE;
+static bool s_is_norwegian = false;
+
+// Two-language string table, picked once at startup from the watch's system
+// locale (see prv_init). Pebble doesn't have a string-resource localization
+// system for this SDK generation, so this is a plain runtime switch.
+static const char *prv_text_for_state(AppState state) {
+  if (s_is_norwegian) {
+    switch (state) {
+      case STATE_IDLE:          return "Trykk for\nå finne mobilen";
+      case STATE_SENDING_START: return "Starter...";
+      case STATE_PLAYING:       return "Spiller\nTrykk for å stoppe";
+      case STATE_SENDING_STOP:  return "Stopper...";
+      case STATE_FAILED:        return "Ikke tilkoblet\nPrøv igjen";
+    }
+  } else {
+    switch (state) {
+      case STATE_IDLE:          return "Press to\nfind phone";
+      case STATE_SENDING_START: return "Starting...";
+      case STATE_PLAYING:       return "Playing\nPress to stop";
+      case STATE_SENDING_STOP:  return "Stopping...";
+      case STATE_FAILED:        return "Not connected\nPress to retry";
+    }
+  }
+  return "";
+}
 
 static void prv_update_status_text(void) {
-  switch (s_state) {
-    case STATE_IDLE:
-      text_layer_set_text(s_status_layer, "Press to\nfind phone");
-      break;
-    case STATE_SENDING_START:
-      text_layer_set_text(s_status_layer, "Starting...");
-      break;
-    case STATE_PLAYING:
-      text_layer_set_text(s_status_layer, "Playing\nPress to stop");
-      break;
-    case STATE_SENDING_STOP:
-      text_layer_set_text(s_status_layer, "Stopping...");
-      break;
-    case STATE_FAILED:
-      text_layer_set_text(s_status_layer, "Not connected\nPress to retry");
-      break;
-  }
+  text_layer_set_text(s_status_layer, prv_text_for_state(s_state));
 }
 
 static void prv_send_command(uint8_t command) {
@@ -126,6 +136,11 @@ static void prv_outbox_failed_handler(DictionaryIterator *iterator, AppMessageRe
 }
 
 static void prv_init(void) {
+  // e.g. "nb", "nb_NO" for Norwegian Bokmal - matched by prefix since the
+  // exact suffix/region can vary.
+  const char *locale = i18n_get_system_locale();
+  s_is_norwegian = (strncmp(locale, "nb", 2) == 0);
+
   app_message_register_outbox_sent(prv_outbox_sent_handler);
   app_message_register_outbox_failed(prv_outbox_failed_handler);
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());

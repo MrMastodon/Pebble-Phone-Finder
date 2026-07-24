@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Finn mobilen min</string>
+
+    <string name="status_checking">Sjekker Pebble-tilkobling…</string>
+    <string name="status_connected">Klokke tilkoblet — trykk på knappen på klokken for å utløse alarmen.</string>
+    <string name="status_not_connected">Fant ikke Pebble-appen, eller klokken er ikke tilkoblet. Installer/åpne den offisielle Pebble-appen og par klokken din.</string>
+
+    <string name="test_alarm_start">Test alarm</string>
+    <string name="test_alarm_stop">Stopp testalarm</string>
+
+    <string name="notification_channel_name">Finn mobilen-alarm</string>
+    <string name="notification_title">Finn mobilen</string>
+    <string name="notification_text">Spiller alarm — trykk Stopp for å stanse</string>
+    <string name="notification_action_stop">Stopp</string>
+
+    <string name="diagnostics_title">Diagnostikk (siste hendelser mottatt fra klokken)</string>
+    <string name="diagnostics_placeholder">Ingen hendelser mottatt ennå — trykk på klokkeknappen, og åpne så appen på nytt.</string>
+    <string name="show_diagnostics">Vis diagnostikk</string>
+    <string name="hide_diagnostics">Skjul diagnostikk</string>
+</resources>

@@ -48,13 +48,30 @@ See `docs/PROTOCOL.md` for the exact shared UUID and AppMessage key/values.
 ### Where does the watch app's icon come from?
 
 `watch/resources/images/icon.png` (25x25 px, declared in `watch/package.json`
-under `resources.media` with `"menuIcon": true`) is the app's icon in the
-watch's own app launcher list. Since this app isn't published through an
-appstore (no separate appstore icon submission applies here), the phone's
-Pebble app also falls back to this same bundled icon when showing this
-watchapp in its list of installed apps — one 25x25 PNG covers both places.
-Regenerate it with Pillow (see git history for the generation script) or
-swap in your own 25x25 PNG at that path.
+under `resources.media` with `"menuIcon": true`) is the **only** icon
+resource type the Pebble SDK supports (confirmed against the installed
+SDK's own resource schema — there is no separate "large icon" field). It's
+guaranteed to show up in the watch's own app launcher list. Whether the
+phone's Pebble app also uses it for this watchapp's entry in its
+installed-apps overview is less certain: that UI historically expects a
+separate icon submitted through an appstore listing, which doesn't apply
+to a sideloaded, non-appstore-published app like this one. If it stays
+blank there after a clean reinstall, that's most likely a limitation of
+the current Pebble mobile app version for sideloaded apps rather than
+something fixable from this project's side. Regenerate the icon with
+`watch/resources/images/generate_icon.py` (needs Pillow) or swap in your
+own 25x25 PNG at that path.
+
+### Localization
+
+Both apps default to English and switch to Norwegian (Bokmål) when the
+device's system language is Norwegian — no manual toggle. The watch checks
+`i18n_get_system_locale()` at startup and picks between two hardcoded
+string tables (Pebble's SDK generation has no string-resource localization
+system, so this is a plain runtime switch); the phone app uses a standard
+Android `res/values-nb/` resource set. To add another language: watch
+add a case in `prv_text_for_state()` in `find_my_phone.c`, phone add
+another `res/values-<code>/strings.xml`.
 
 ### Does the companion app need to stay running in the background?
 
