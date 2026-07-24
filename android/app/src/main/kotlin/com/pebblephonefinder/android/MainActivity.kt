@@ -55,6 +55,10 @@ class MainActivity : AppCompatActivity() {
         binding.testAlarmButton.setOnClickListener { toggleTestAlarm() }
         binding.toggleDiagnosticsButton.setOnClickListener { toggleDiagnosticsPanel() }
         binding.chooseSoundButton.setOnClickListener { launchSoundPicker() }
+        binding.resetSoundButton.setOnClickListener {
+            AlarmSoundPreference.set(applicationContext, null)
+            updateAlarmSoundText()
+        }
     }
 
     private fun launchSoundPicker() {
@@ -76,6 +80,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             getString(R.string.current_sound, getString(R.string.default_sound_name))
         }
+        binding.resetSoundButton.visibility = if (uri != null) View.VISIBLE else View.GONE
     }
 
     override fun onResume() {

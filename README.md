@@ -56,7 +56,10 @@ grant, unlike a one-off Storage Access Framework grant for a picked file
 (which can be revoked, e.g. across a reboot). The choice is stored in
 `AlarmSoundPreference` and used by `AlarmPlayer`, which falls back to the
 app's bundled default tone if the chosen sound is ever unavailable (e.g.
-removed by an OS update) - the alarm always plays *something*.
+removed by an OS update) - the alarm always plays *something*. A "Reset to
+default sound" button appears once a non-default sound is chosen, since
+the picker's own "Default" option is deliberately hidden (it would point
+at the phone's general default alarm sound, not this app's bundled tone).
 
 ### Where does the watch app's icon come from?
 

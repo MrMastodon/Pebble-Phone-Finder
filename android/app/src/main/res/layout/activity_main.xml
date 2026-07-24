@@ -37,6 +37,14 @@
         android:text="@string/choose_sound" />
 
     <Button
+        android:id="@+id/resetSoundButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:text="@string/reset_sound" />
+
+    <Button
         android:id="@+id/toggleDiagnosticsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
