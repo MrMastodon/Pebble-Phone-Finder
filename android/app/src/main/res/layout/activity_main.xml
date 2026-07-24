@@ -21,6 +21,21 @@
         android:layout_marginTop="24dp"
         android:text="@string/test_alarm_start" />
 
+    <TextView
+        android:id="@+id/currentSoundText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="14sp"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/chooseSoundButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/choose_sound" />
+
     <Button
         android:id="@+id/toggleDiagnosticsButton"
         android:layout_width="wrap_content"

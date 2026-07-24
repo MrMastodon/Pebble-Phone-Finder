@@ -17,4 +17,9 @@
     <string name="diagnostics_placeholder">No events received yet — press the watch button, then reopen this app.</string>
     <string name="show_diagnostics">Show diagnostics</string>
     <string name="hide_diagnostics">Hide diagnostics</string>
+
+    <string name="choose_sound">Choose alarm sound</string>
+    <string name="choose_sound_title">Find My Phone alarm sound</string>
+    <string name="current_sound">Alarm sound: %1$s</string>
+    <string name="default_sound_name">Default</string>
 </resources>

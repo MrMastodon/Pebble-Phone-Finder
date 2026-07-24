@@ -17,4 +17,9 @@
     <string name="diagnostics_placeholder">Ingen hendelser mottatt ennå — trykk på klokkeknappen, og åpne så appen på nytt.</string>
     <string name="show_diagnostics">Vis diagnostikk</string>
     <string name="hide_diagnostics">Skjul diagnostikk</string>
+
+    <string name="choose_sound">Velg alarmlyd</string>
+    <string name="choose_sound_title">Finn mobilen-alarmlyd</string>
+    <string name="current_sound">Alarmlyd: %1$s</string>
+    <string name="default_sound_name">Standard</string>
 </resources>

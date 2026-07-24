@@ -45,6 +45,19 @@ built artifacts (a `.pbw` for the watch, a debug `.apk` for the phone) are in
 
 See `docs/PROTOCOL.md` for the exact shared UUID and AppMessage key/values.
 
+### Choosing a different alarm sound
+
+The phone app's "Choose alarm sound" button opens Android's built-in sound
+picker (`RingtoneManager.ACTION_RINGTONE_PICKER`), scoped to alarm-type
+sounds with the silent option hidden. It's deliberately limited to the
+phone's built-in sounds rather than an arbitrary file: those live in a
+shared system database with URIs that never expire or need a permission
+grant, unlike a one-off Storage Access Framework grant for a picked file
+(which can be revoked, e.g. across a reboot). The choice is stored in
+`AlarmSoundPreference` and used by `AlarmPlayer`, which falls back to the
+app's bundled default tone if the chosen sound is ever unavailable (e.g.
+removed by an OS update) - the alarm always plays *something*.
+
 ### Where does the watch app's icon come from?
 
 `watch/resources/images/icon.png` (25x25 px, declared in `watch/package.json`

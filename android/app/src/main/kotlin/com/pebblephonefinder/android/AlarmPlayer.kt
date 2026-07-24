@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
+import android.util.Log
 
 /**
  * Plays a looping alarm tone on [AudioManager.STREAM_ALARM], which (like the
@@ -27,24 +28,42 @@ class AlarmPlayer(private val context: Context) {
     val isPlaying: Boolean
         get() = mediaPlayer != null
 
+    private val defaultSoundUri: Uri
+        get() = Uri.parse("android.resource://${context.packageName}/${R.raw.alarm_sound}")
+
     fun start() {
         if (mediaPlayer != null) return
 
         savedAlarmVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
         forceAlarmStreamToMax(audioManager)
 
-        val soundUri = Uri.parse("android.resource://${context.packageName}/${R.raw.alarm_sound}")
-        mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build()
-            )
-            isLooping = true
-            setDataSource(context, soundUri)
-            prepare()
-            start()
+        val chosenUri = AlarmSoundPreference.get(context)
+        mediaPlayer = chosenUri?.let { buildPlayer(it) } ?: buildPlayer(defaultSoundUri)
+    }
+
+    /**
+     * Builds and starts a [MediaPlayer] for [soundUri], or returns null if it
+     * couldn't be loaded (e.g. a previously-chosen built-in sound was removed
+     * by an OS update) - the caller falls back to the bundled default sound
+     * in that case, so the alarm always plays *something*.
+     */
+    private fun buildPlayer(soundUri: Uri): MediaPlayer? {
+        return try {
+            MediaPlayer().apply {
+                setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build()
+                )
+                isLooping = true
+                setDataSource(context, soundUri)
+                prepare()
+                start()
+            }
+        } catch (e: Exception) {
+            Log.w("AlarmPlayer", "Couldn't play $soundUri, falling back", e)
+            null
         }
     }
 

@@ -3,11 +3,14 @@ package com.pebblephonefinder.android
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.pebblephonefinder.android.databinding.ActivityMainBinding
@@ -28,6 +31,16 @@ class MainActivity : AppCompatActivity() {
     private val requestNotificationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* no-op either way */ }
 
+    private val pickAlarmSound =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != RESULT_OK) return@registerForActivityResult
+            val uri: Uri? = result.data?.let {
+                IntentCompat.getParcelableExtra(it, RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java)
+            }
+            AlarmSoundPreference.set(applicationContext, uri)
+            updateAlarmSoundText()
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -37,9 +50,32 @@ class MainActivity : AppCompatActivity() {
 
         requestNotificationPermissionIfNeeded()
         observeConnectionStatus()
+        updateAlarmSoundText()
 
         binding.testAlarmButton.setOnClickListener { toggleTestAlarm() }
         binding.toggleDiagnosticsButton.setOnClickListener { toggleDiagnosticsPanel() }
+        binding.chooseSoundButton.setOnClickListener { launchSoundPicker() }
+    }
+
+    private fun launchSoundPicker() {
+        val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+            putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, false)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, AlarmSoundPreference.get(applicationContext))
+            putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.choose_sound_title))
+        }
+        pickAlarmSound.launch(intent)
+    }
+
+    private fun updateAlarmSoundText() {
+        val uri = AlarmSoundPreference.get(applicationContext)
+        binding.currentSoundText.text = if (uri != null) {
+            val title = RingtoneManager.getRingtone(applicationContext, uri)?.getTitle(applicationContext)
+            getString(R.string.current_sound, title ?: getString(R.string.default_sound_name))
+        } else {
+            getString(R.string.current_sound, getString(R.string.default_sound_name))
+        }
     }
 
     override fun onResume() {
