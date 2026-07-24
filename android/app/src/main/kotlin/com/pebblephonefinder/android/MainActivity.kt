@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,11 +39,20 @@ class MainActivity : AppCompatActivity() {
         observeConnectionStatus()
 
         binding.testAlarmButton.setOnClickListener { toggleTestAlarm() }
+        binding.toggleDiagnosticsButton.setOnClickListener { toggleDiagnosticsPanel() }
     }
 
     override fun onResume() {
         super.onResume()
         binding.diagnosticsText.text = DiagnosticsLog.events(applicationContext)
+    }
+
+    private fun toggleDiagnosticsPanel() {
+        val showing = binding.diagnosticsPanel.visibility == View.VISIBLE
+        binding.diagnosticsPanel.visibility = if (showing) View.GONE else View.VISIBLE
+        binding.toggleDiagnosticsButton.setText(
+            if (showing) R.string.show_diagnostics else R.string.hide_diagnostics
+        )
     }
 
     private fun requestNotificationPermissionIfNeeded() {

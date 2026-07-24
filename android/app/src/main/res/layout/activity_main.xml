@@ -21,26 +21,43 @@
         android:layout_marginTop="24dp"
         android:text="@string/test_alarm_start" />
 
-    <TextView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/toggleDiagnosticsButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/diagnostics_title"
-        android:textStyle="bold" />
+        android:layout_marginTop="24dp"
+        android:text="@string/show_diagnostics" />
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/diagnosticsPanel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="8dp">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
-            android:id="@+id/diagnosticsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textSize="12sp"
-            android:text="@string/diagnostics_placeholder" />
-    </ScrollView>
+            android:layout_marginTop="16dp"
+            android:text="@string/diagnostics_title"
+            android:textStyle="bold" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/diagnosticsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:text="@string/diagnostics_placeholder" />
+        </ScrollView>
+
+    </LinearLayout>
 
 </LinearLayout>

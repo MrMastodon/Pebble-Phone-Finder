@@ -45,6 +45,17 @@ built artifacts (a `.pbw` for the watch, a debug `.apk` for the phone) are in
 
 See `docs/PROTOCOL.md` for the exact shared UUID and AppMessage key/values.
 
+### Where does the watch app's icon come from?
+
+`watch/resources/images/icon.png` (25x25 px, declared in `watch/package.json`
+under `resources.media` with `"menuIcon": true`) is the app's icon in the
+watch's own app launcher list. Since this app isn't published through an
+appstore (no separate appstore icon submission applies here), the phone's
+Pebble app also falls back to this same bundled icon when showing this
+watchapp in its list of installed apps — one 25x25 PNG covers both places.
+Regenerate it with Pillow (see git history for the generation script) or
+swap in your own 25x25 PNG at that path.
+
 ### Does the companion app need to stay running in the background?
 
 No — it's event-driven, not an always-on background service. `PebbleListenerService`

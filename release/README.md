@@ -18,26 +18,28 @@ to everything here.
   debug-keystore build) start a fresh series at `1.0.0`, independent of
   wherever the debug series was left off.
 
-## Current build: `0.3.0-debug`
+## Current build: `0.4.0-debug`
 
 | File | What it is | Install with |
 |------|------------|---------------|
-| `find-my-phone-watch-v0.3.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.3.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
-| `find-my-phone-companion-v0.3.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.3.0-debug.apk` |
+| `find-my-phone-watch-v0.4.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.4.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
+| `find-my-phone-companion-v0.4.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.4.0-debug.apk` |
 
-`0.3.0-debug` fixes a real bug found using `0.2.0-debug`'s diagnostics on
-real hardware: the watch's `dict_write_uint8()` arrives at the phone as
-`PebbleDictionaryItem.UInt32`, not `UInt8` as the Android code assumed, so
-the command was silently dropped even though the message was delivered
-correctly end to end. `PebbleListenerService` now reads whichever integer
-width actually shows up (`PebbleDictionaryExt.kt`). The `0.2.0-debug`
-diagnostics panel and watch-side ack states are unchanged and still present.
+`0.4.0-debug` is a UI/polish pass now that the core round trip works
+end to end (confirmed on real hardware with `0.3.0-debug`):
+- Watch: bigger status text, a 25x25 app icon (shown both in the watch's
+  app launcher list and, since this app isn't published through an
+  appstore, in the phone's list of installed watchapps too — see
+  `watch/resources/images/icon.png`), and an orange arrow drawn at
+  SELECT-button height pointing at it.
+- Phone: the diagnostics panel added in `0.2.0-debug` is now hidden by
+  default behind a "Show diagnostics" button instead of always visible.
 
 ### SHA-256 checksums
 
 ```
-b02c7e061893b51a6d80ecea4c0d7e1a3ee76ccea7ba66e75cda8e8869aaa175  find-my-phone-watch-v0.3.0-debug.pbw
-17f47e5dae881a47a54b27c530cb226220b0ffc23a72c8aed18958d070a1f4af  find-my-phone-companion-v0.3.0-debug.apk
+d14da662822a077cfba6c177bdcbb26f6f5a5492349a4fccd408804eddf97aa3  find-my-phone-watch-v0.4.0-debug.pbw
+71133beb4f1f942fd920359f22003b8f1365640618ac64a48459721fe3a06068  find-my-phone-companion-v0.4.0-debug.apk
 ```
 
 Both were built and verified in this repo's CI-less sandbox environment

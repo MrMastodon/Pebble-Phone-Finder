@@ -15,4 +15,6 @@
 
     <string name="diagnostics_title">Diagnostics (last events received from watch)</string>
     <string name="diagnostics_placeholder">No events received yet — press the watch button, then reopen this app.</string>
+    <string name="show_diagnostics">Show diagnostics</string>
+    <string name="hide_diagnostics">Hide diagnostics</string>
 </resources>
