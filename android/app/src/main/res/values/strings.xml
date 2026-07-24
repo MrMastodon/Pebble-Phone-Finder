@@ -12,4 +12,7 @@
     <string name="notification_title">Find My Phone</string>
     <string name="notification_text">Playing alarm — tap Stop to silence</string>
     <string name="notification_action_stop">Stop</string>
+
+    <string name="diagnostics_title">Diagnostics (last events received from watch)</string>
+    <string name="diagnostics_placeholder">No events received yet — press the watch button, then reopen this app.</string>
 </resources>

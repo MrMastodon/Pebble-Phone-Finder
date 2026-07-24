@@ -40,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         binding.testAlarmButton.setOnClickListener { toggleTestAlarm() }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.diagnosticsText.text = DiagnosticsLog.events(applicationContext)
+    }
+
     private fun requestNotificationPermissionIfNeeded() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
         val granted = ContextCompat.checkSelfPermission(

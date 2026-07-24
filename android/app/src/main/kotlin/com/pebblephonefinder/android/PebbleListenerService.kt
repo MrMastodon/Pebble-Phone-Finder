@@ -22,6 +22,11 @@ class PebbleListenerService : BasePebbleListenerService() {
         data: PebbleDictionary,
         watch: WatchIdentifier,
     ): ReceiveResult {
+        // Logged unconditionally (even for a UUID that isn't ours) so a
+        // mismatch or "nothing ever arrives" can be told apart from inside
+        // the app, without needing adb - see MainActivity's diagnostics.
+        DiagnosticsLog.record(this, "onMessageReceived uuid=$watchappUUID data=$data")
+
         if (watchappUUID == Protocol.APP_UUID) {
             val commandItem = data[Protocol.COMMAND_KEY.toUInt()]
             if (commandItem is PebbleDictionaryItem.UInt8) {
@@ -34,9 +39,13 @@ class PebbleListenerService : BasePebbleListenerService() {
         return ReceiveResult.Ack
     }
 
-    override fun onAppOpened(watchappUUID: UUID, watch: WatchIdentifier) {}
+    override fun onAppOpened(watchappUUID: UUID, watch: WatchIdentifier) {
+        DiagnosticsLog.record(this, "onAppOpened uuid=$watchappUUID")
+    }
 
-    override fun onAppClosed(watchappUUID: UUID, watch: WatchIdentifier) {}
+    override fun onAppClosed(watchappUUID: UUID, watch: WatchIdentifier) {
+        DiagnosticsLog.record(this, "onAppClosed uuid=$watchappUUID")
+    }
 
     private fun sendServiceAction(action: String) {
         val intent = Intent(this, FindPhoneService::class.java).apply { this.action = action }
