@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.core.content.ContextCompat
 import io.rebble.pebblekit2.client.BasePebbleListenerService
 import io.rebble.pebblekit2.common.model.PebbleDictionary
-import io.rebble.pebblekit2.common.model.PebbleDictionaryItem
 import io.rebble.pebblekit2.common.model.ReceiveResult
 import io.rebble.pebblekit2.common.model.WatchIdentifier
 import java.util.UUID
@@ -28,12 +27,10 @@ class PebbleListenerService : BasePebbleListenerService() {
         DiagnosticsLog.record(this, "onMessageReceived uuid=$watchappUUID data=$data")
 
         if (watchappUUID == Protocol.APP_UUID) {
-            val commandItem = data[Protocol.COMMAND_KEY.toUInt()]
-            if (commandItem is PebbleDictionaryItem.UInt8) {
-                when (commandItem.value.toInt()) {
-                    Protocol.COMMAND_START -> sendServiceAction(FindPhoneService.ACTION_START_ALARM)
-                    Protocol.COMMAND_STOP -> sendServiceAction(FindPhoneService.ACTION_STOP_ALARM)
-                }
+            val command = data[Protocol.COMMAND_KEY.toUInt()]?.toIntOrNull()
+            when (command) {
+                Protocol.COMMAND_START -> sendServiceAction(FindPhoneService.ACTION_START_ALARM)
+                Protocol.COMMAND_STOP -> sendServiceAction(FindPhoneService.ACTION_STOP_ALARM)
             }
         }
         return ReceiveResult.Ack
