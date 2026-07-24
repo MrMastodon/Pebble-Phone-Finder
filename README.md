@@ -89,6 +89,19 @@ Android `res/values-nb/` resource set. To add another language: watch
 add a case in `prv_text_for_state()` in `find_my_phone.c`, phone add
 another `res/values-<code>/strings.xml`.
 
+### On-device diagnostics
+
+The phone app has a "Show diagnostics" button (hidden by default) that
+reveals a log of every `PebbleListenerService` callback received — app
+opened/closed, any message, even for a UUID that isn't ours — with
+timestamps, persisted across app restarts. It exists because there's no
+adb/logcat access in most real-world troubleshooting situations; if the
+watch shows its message was sent but nothing happens on the phone, this
+panel is the first place to check whether anything arrived at all. The
+watch side has matching feedback: it distinguishes "sent but not yet
+acknowledged by the phone" from "acknowledged" from "not connected" in its
+own status text (see `find_my_phone.c`).
+
 ### Does the companion app need to stay running in the background?
 
 No — it's event-driven, not an always-on background service. `PebbleListenerService`
@@ -179,14 +192,17 @@ watch, phone, and the official Pebble app; see Known limitations below.
    again (or tap Stop on the phone's notification) to stop it. The app's
    "Test alarm" button drives the same alarm without needing the watch at
    all, useful for confirming the phone-side behavior works before pairing.
+6. Optional: use "Choose alarm sound" to pick a different built-in phone
+   sound, and "Show diagnostics" if you need to check what's actually being
+   received from the watch.
 
 ## Known limitations
 
 - **One-directional protocol.** The watch has no way to learn that the phone
-  stopped the alarm via its own notification button — it'll keep showing
-  "Playing... press to stop" until pressed again. That next press sends
-  `STOP` a second time, which the Android side treats as a harmless no-op.
-  See `docs/PROTOCOL.md`.
+  stopped the alarm via its own notification button — it'll keep showing its
+  "playing" status until pressed again. That next press sends `STOP` a
+  second time, which the Android side treats as a harmless no-op. See
+  `docs/PROTOCOL.md`.
 - **Total "Do Not Disturb" silence** is an OS-level restriction this app
   cannot bypass without you separately granting it Notification Policy
   Access — it is not something a normal app can silently override, and this
