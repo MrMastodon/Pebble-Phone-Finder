@@ -14,6 +14,7 @@ typedef enum {
 
 static Window *s_window;
 static TextLayer *s_status_layer;
+static TextLayer *s_bt_status_layer;
 static Layer *s_select_arrow_layer;
 
 static AppState s_state = STATE_IDLE;
@@ -45,6 +46,21 @@ static const char *prv_text_for_state(AppState state) {
 
 static void prv_update_status_text(void) {
   text_layer_set_text(s_status_layer, prv_text_for_state(s_state));
+}
+
+static void prv_update_bt_status(bool connected) {
+  const char *text;
+  if (s_is_norwegian) {
+    text = connected ? "Telefon: tilkoblet" : "Telefon: frakoblet";
+  } else {
+    text = connected ? "Phone: connected" : "Phone: disconnected";
+  }
+  text_layer_set_text(s_bt_status_layer, text);
+  text_layer_set_text_color(s_bt_status_layer, connected ? GColorJaegerGreen : GColorRed);
+}
+
+static void prv_bt_connection_handler(bool connected) {
+  prv_update_bt_status(connected);
 }
 
 static void prv_send_command(uint8_t command) {
@@ -100,7 +116,12 @@ static void prv_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  s_status_layer = text_layer_create(GRect(4, 24, bounds.size.w - 8, bounds.size.h - 48));
+  s_bt_status_layer = text_layer_create(GRect(0, 4, bounds.size.w, 20));
+  text_layer_set_text_alignment(s_bt_status_layer, GTextAlignmentCenter);
+  text_layer_set_font(s_bt_status_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
+  layer_add_child(window_layer, text_layer_get_layer(s_bt_status_layer));
+
+  s_status_layer = text_layer_create(GRect(4, 28, bounds.size.w - 8, bounds.size.h - 52));
   text_layer_set_text_alignment(s_status_layer, GTextAlignmentCenter);
   text_layer_set_font(s_status_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   layer_add_child(window_layer, text_layer_get_layer(s_status_layer));
@@ -110,9 +131,11 @@ static void prv_window_load(Window *window) {
   layer_add_child(window_layer, s_select_arrow_layer);
 
   prv_update_status_text();
+  prv_update_bt_status(connection_service_peek_pebble_app_connection());
 }
 
 static void prv_window_unload(Window *window) {
+  text_layer_destroy(s_bt_status_layer);
   text_layer_destroy(s_status_layer);
   layer_destroy(s_select_arrow_layer);
 }
@@ -145,6 +168,11 @@ static void prv_init(void) {
   app_message_register_outbox_failed(prv_outbox_failed_handler);
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 
+  connection_service_subscribe((ConnectionHandlers) {
+    .pebble_app_connection_handler = prv_bt_connection_handler,
+    .pebblekit_connection_handler = NULL,
+  });
+
   s_window = window_create();
   window_set_click_config_provider(s_window, prv_click_config_provider);
   window_set_window_handlers(s_window, (WindowHandlers) {
@@ -155,6 +183,7 @@ static void prv_init(void) {
 }
 
 static void prv_deinit(void) {
+  connection_service_unsubscribe();
   window_destroy(s_window);
 }
 

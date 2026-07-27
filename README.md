@@ -33,7 +33,10 @@ built artifacts (a `.pbw` for the watch, a debug `.apk` for the phone) are in
 1. `watch/` — a Pebble C watchapp for the `emery` platform (Pebble Time 2 /
    Core Time 2). One screen, one button (SELECT): press once to start the
    alarm, press again to stop it. Sends a single AppMessage command to the
-   phone each time.
+   phone each time. A small always-visible line at the top of the screen
+   shows live whether the watch is currently connected to the phone's
+   Pebble app (`connection_service_subscribe()`), independent of the
+   per-press ack feedback in the main status text.
 2. `android/` — a native Android companion app. It does **not** talk to the
    watch directly; it registers with the official Core Devices "Pebble" app
    (which holds the actual Bluetooth connection) via the third-party
