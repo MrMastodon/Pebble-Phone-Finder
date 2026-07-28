@@ -29,4 +29,8 @@
     <string name="developed_by">Utviklet av MrMastodon</string>
     <string name="buy_me_coffee">Spander en kaffe på meg</string>
     <string name="no_browser">Fant ingen nettleser til å åpne donasjonssiden.</string>
+
+    <string name="choose_host_app_title">Hvilken Pebble-app skal få lov til å utløse alarmen?</string>
+    <string name="host_app_pinned">Alarm godtas fra: %1$s</string>
+    <string name="host_app_none">Ingen Pebble-app er låst ennå</string>
 </resources>

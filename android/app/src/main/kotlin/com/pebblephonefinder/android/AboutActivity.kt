@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.pebblephonefinder.android.databinding.ActivityAboutBinding
+import kotlinx.coroutines.launch
 
 /**
  * Colophon: app name/version, developer credit, a donation link, and the
@@ -38,6 +40,23 @@ class AboutActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.diagnosticsText.text = DiagnosticsLog.events(applicationContext)
+        showPinnedHostApp()
+    }
+
+    /**
+     * Surfaces which Pebble app is allowed to reach us. This is the only way
+     * to actually confirm the lockdown in [PebbleHostApp] is live — the
+     * alarm behaves identically whether it's on or off.
+     */
+    private fun showPinnedHostApp() {
+        lifecycleScope.launch {
+            val pinned = PebbleHostApp.selected(applicationContext)
+            binding.hostAppText.text = if (pinned != null) {
+                getString(R.string.host_app_pinned, pinned)
+            } else {
+                getString(R.string.host_app_none)
+            }
+        }
     }
 
     private fun toggleDiagnosticsPanel() {

@@ -8,13 +8,18 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.pebblephonefinder.android.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Minimal UI: shows whether a Pebble watch is currently reachable through the
@@ -50,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         requestNotificationPermissionIfNeeded()
         observeConnectionStatus()
+        promptForHostAppIfAmbiguous()
         updateAlarmSoundText()
 
         binding.testAlarmButton.setOnClickListener { toggleTestAlarm() }
@@ -98,13 +104,43 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeConnectionStatus() {
         lifecycleScope.launch {
-            pebbleConnection.connectedWatchName().collect { watchName ->
-                binding.statusText.text = if (watchName != null) {
-                    getString(R.string.status_connected) + "\n(" + watchName + ")"
-                } else {
-                    getString(R.string.status_not_connected)
+            // Stops collecting (and stops the binder traffic behind it) while
+            // the activity isn't visible.
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                pebbleConnection.connectedWatchName().collect { watchName ->
+                    binding.statusText.text = if (watchName != null) {
+                        getString(R.string.status_connected) + "\n(" + watchName + ")"
+                    } else {
+                        getString(R.string.status_not_connected)
+                    }
                 }
             }
+        }
+    }
+
+    /**
+     * Message delivery is pinned to a single Pebble host app (see
+     * [PebbleHostApp]). The usual case — exactly one installed — is pinned
+     * automatically at startup; only genuine ambiguity reaches this prompt.
+     */
+    private fun promptForHostAppIfAmbiguous() {
+        lifecycleScope.launch {
+            if (PebbleHostApp.selected(applicationContext) != null) return@launch
+
+            val candidates = withContext(Dispatchers.IO) {
+                PebbleHostApp.eligible(applicationContext)
+            }
+            if (candidates.size < 2) return@launch
+
+            AlertDialog.Builder(this@MainActivity)
+                .setTitle(R.string.choose_host_app_title)
+                .setItems(candidates.toTypedArray()) { _, which ->
+                    lifecycleScope.launch {
+                        PebbleHostApp.select(applicationContext, candidates[which])
+                    }
+                }
+                .setCancelable(false)
+                .show()
         }
     }
 

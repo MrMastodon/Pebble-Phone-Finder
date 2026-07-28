@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 11 and below. Kept in sync with data_extraction_rules.xml.
+
+  Excluded:
+  - diagnostics: a troubleshooting log of watch traffic. No value once
+    restored onto another device, and no reason to ship it to the cloud.
+  - datastore/: PebbleKitAndroid2's pinned host-app selection. Security
+    state that should be re-established per device, not inherited from a
+    backup (see PebbleHostApp).
+-->
+<full-backup-content>
+    <exclude domain="sharedpref" path="diagnostics.xml" />
+    <exclude domain="file" path="datastore/" />
+</full-backup-content>

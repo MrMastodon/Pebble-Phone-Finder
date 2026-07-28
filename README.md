@@ -92,6 +92,29 @@ Android `res/values-nb/` resource set. To add another language: watch
 add a case in `prv_text_for_state()` in `find_my_phone.c`, phone add
 another `res/values-<code>/strings.xml`.
 
+### Which Pebble app is allowed to trigger the alarm
+
+PebbleKitAndroid2 accepts messages from *any* installed app advertising
+itself as a Pebble host, so without intervention a malicious app could
+impersonate one and set off a max-volume alarm. `PebbleHostApp` turns that
+default off and pins a single host package instead — trust on first use,
+locked down after.
+
+Two details of the library's picker shape this:
+
+- `enableAutoSelect` is an **in-memory** field that resets to `true` on
+  every process start, so it has to be set from `FindMyPhoneApplication`,
+  not an Activity. The Pebble app can cold start our process straight into
+  `PebbleListenerService` with no Activity ever running — set it anywhere
+  else and everything still *works*, you're just not actually protected.
+- The selection itself **is** persisted (in the library's own DataStore),
+  so it's written once per install.
+
+The usual case — exactly one host app installed — is pinned automatically
+with no prompt. More than one is ambiguous and asks. Because the alarm
+behaves identically whether the lockdown is on or off, the About screen
+shows the pinned package: that line is the verification.
+
 ### About screen and on-device diagnostics
 
 The phone app has an "About" button on the main screen that opens

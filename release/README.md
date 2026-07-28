@@ -18,15 +18,38 @@ to everything here.
   debug-keystore build) start a fresh series at `1.0.0`, independent of
   wherever the debug series was left off.
 
-## Current build: `0.11.0-debug`
+## Current build: `0.12.0-debug`
 
 | File | What it is | Install with |
 |------|------------|---------------|
-| `find-my-phone-watch-v0.11.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.11.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
-| `find-my-phone-companion-v0.11.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.11.0-debug.apk` |
+| `find-my-phone-watch-v0.12.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.12.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
+| `find-my-phone-companion-v0.12.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.12.0-debug.apk` |
 
-`0.11.0-debug` is a stability/robustness pass from a pre-release code
-review — no new features, but several crash and stuck-state paths closed:
+`0.12.0-debug` finishes the pre-release review with the remaining
+security and ANR items:
+
+- **Alarm delivery is pinned to one Pebble host app.** PebbleKitAndroid2
+  otherwise accepts messages from *any* installed app claiming to be a
+  Pebble host, so a malicious app could set off the alarm. The normal case
+  (exactly one host app installed) is pinned silently at startup, so
+  nothing changes for you; you're only prompted if there's genuine
+  ambiguity. **The About screen now shows which app is pinned** — that
+  line is the only way to confirm the lockdown is actually live, since
+  the alarm behaves identically either way.
+- Watch-connection status is collected off the main thread. The library
+  marks that call `@WorkerThread` and it goes over binder, so collecting
+  it on the main thread risked ANRs — a metric Play Console tracks.
+- Backup rules exclude the diagnostics log and the pinned-host-app state,
+  so neither is carried to the cloud or inherited by a new device.
+
+### Verifying the lockdown after installing
+
+Open **About** and check the "Alarm accepted from" line. On a normal setup
+it should name the official Pebble app package (`coredevices.coreapp`). If
+it says nothing is pinned, the alarm still works but is not locked down.
+
+`0.11.0-debug` was a stability/robustness pass from the same review — no
+new features, but several crash and stuck-state paths closed:
 
 - Raising or restoring the alarm volume no longer crashes when the OS
   refuses it as a Do Not Disturb policy change (the app has no
@@ -53,8 +76,8 @@ review — no new features, but several crash and stuck-state paths closed:
 ### SHA-256 checksums
 
 ```
-5ecc00d5e8872adab832c1789ffb663fef13bf25ee0549ad109cd4e6453398d8  find-my-phone-watch-v0.11.0-debug.pbw
-4163d1b6ddadd491ced2de98ad39b14a8b99713afe52bc2440b67b29bf56ae4d  find-my-phone-companion-v0.11.0-debug.apk
+330b499c4cf931e42aa4d58841c57bc0d9b8dbe170886cc7d686e655e3c6af13  find-my-phone-watch-v0.12.0-debug.pbw
+85713212471ae5403cce34ba4e87799deb1436f643a989d11561f4639ca4259f  find-my-phone-companion-v0.12.0-debug.apk
 ```
 
 Both were built and verified in this repo's CI-less sandbox environment

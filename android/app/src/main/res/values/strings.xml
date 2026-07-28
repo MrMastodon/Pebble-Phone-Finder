@@ -29,4 +29,8 @@
     <string name="developed_by">Developed by MrMastodon</string>
     <string name="buy_me_coffee">Buy me a coffee</string>
     <string name="no_browser">No browser found to open the donation page.</string>
+
+    <string name="choose_host_app_title">Which Pebble app should be allowed to trigger the alarm?</string>
+    <string name="host_app_pinned">Alarm accepted from: %1$s</string>
+    <string name="host_app_none">No Pebble app pinned yet</string>
 </resources>

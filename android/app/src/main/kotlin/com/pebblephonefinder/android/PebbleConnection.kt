@@ -2,7 +2,9 @@ package com.pebblephonefinder.android
 
 import android.content.Context
 import io.rebble.pebblekit2.client.DefaultPebbleInfoRetriever
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 /**
@@ -17,7 +19,15 @@ import kotlinx.coroutines.flow.map
 class PebbleConnection(context: Context) {
     private val infoRetriever = DefaultPebbleInfoRetriever(context)
 
-    /** Emits the first connected watch's name, or null if none is connected. */
+    /**
+     * Emits the first connected watch's name, or null if none is connected.
+     *
+     * Collected off the main thread: the library annotates
+     * `getConnectedWatches()` as `@WorkerThread`, and it talks to the Pebble
+     * app over binder — blocking the main thread there means ANRs.
+     */
     fun connectedWatchName(): Flow<String?> =
-        infoRetriever.getConnectedWatches().map { watches -> watches.firstOrNull()?.name }
+        infoRetriever.getConnectedWatches()
+            .map { watches -> watches.firstOrNull()?.name }
+            .flowOn(Dispatchers.IO)
 }
