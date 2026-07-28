@@ -17,9 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.pebblephonefinder.android.databinding.ActivityMainBinding
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Minimal UI: shows whether a Pebble watch is currently reachable through the
@@ -127,9 +125,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             if (PebbleHostApp.selected(applicationContext) != null) return@launch
 
-            val candidates = withContext(Dispatchers.IO) {
-                PebbleHostApp.eligible(applicationContext)
-            }
+            val candidates = PebbleHostApp.eligible(applicationContext)
             if (candidates.size < 2) return@launch
 
             AlertDialog.Builder(this@MainActivity)
@@ -139,7 +135,10 @@ class MainActivity : AppCompatActivity() {
                         PebbleHostApp.select(applicationContext, candidates[which])
                     }
                 }
-                .setCancelable(false)
+                // Dismissable: declining just leaves nothing pinned (the
+                // About screen says so), and the prompt returns next launch.
+                // An undismissable dialog on first open would be worse.
+                .setCancelable(true)
                 .show()
         }
     }

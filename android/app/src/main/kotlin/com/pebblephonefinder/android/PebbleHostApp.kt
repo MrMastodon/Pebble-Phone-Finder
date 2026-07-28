@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Controls which Pebble mobile app is allowed to deliver watch messages to
@@ -72,24 +73,32 @@ object PebbleHostApp {
         }
     }
 
+    // All three below reach the PackageManager and/or DataStore, i.e. binder
+    // and disk. The dispatcher is forced here rather than left to callers, so
+    // there's no way to accidentally do this work on the main thread.
+
     /** Package name of the pinned host app, or null if none is pinned yet. */
-    suspend fun selected(context: Context): String? = try {
-        picker(context).getCurrentlySelectedApp()
-    } catch (e: Exception) {
-        Log.w(TAG, "Could not read the selected host app", e)
-        null
+    suspend fun selected(context: Context): String? = withContext(Dispatchers.IO) {
+        try {
+            picker(context).getCurrentlySelectedApp()
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not read the selected host app", e)
+            null
+        }
     }
 
     /** Every installed app advertising itself as a Pebble host. */
-    fun eligible(context: Context): List<String> = try {
-        picker(context).getAllEligibleApps()
-    } catch (e: Exception) {
-        Log.w(TAG, "Could not list eligible host apps", e)
-        emptyList()
+    suspend fun eligible(context: Context): List<String> = withContext(Dispatchers.IO) {
+        try {
+            picker(context).getAllEligibleApps()
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not list eligible host apps", e)
+            emptyList()
+        }
     }
 
     /** Pins [packageName], or clears the pin when given null. */
-    suspend fun select(context: Context, packageName: String?) {
+    suspend fun select(context: Context, packageName: String?) = withContext(Dispatchers.IO) {
         try {
             picker(context).selectApp(packageName)
             Log.i(TAG, "Pinned Pebble host app: ${packageName ?: "(cleared)"}")

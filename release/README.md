@@ -18,14 +18,22 @@ to everything here.
   debug-keystore build) start a fresh series at `1.0.0`, independent of
   wherever the debug series was left off.
 
-## Current build: `0.12.0-debug`
+## Current build: `0.13.0-debug`
 
 | File | What it is | Install with |
 |------|------------|---------------|
-| `find-my-phone-watch-v0.12.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.12.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
-| `find-my-phone-companion-v0.12.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.12.0-debug.apk` |
+| `find-my-phone-watch-v0.13.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.13.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
+| `find-my-phone-companion-v0.13.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.13.0-debug.apk` |
 
-`0.12.0-debug` finishes the pre-release review with the remaining
+`0.13.0-debug` reviews the code `0.12.0-debug` itself added. `PebbleHostApp`
+reached the PackageManager and DataStore on whichever thread called it, and
+the About screen called it from the main thread — the same ANR class that
+`0.12.0-debug` had just fixed elsewhere. The dispatcher is now forced inside
+those functions rather than left to callers. The host-app prompt is also
+dismissable now; declining leaves nothing pinned (the About screen says so)
+and asks again next launch.
+
+`0.12.0-debug` finished the pre-release review with the remaining
 security and ANR items:
 
 - **Alarm delivery is pinned to one Pebble host app.** PebbleKitAndroid2
@@ -76,8 +84,8 @@ new features, but several crash and stuck-state paths closed:
 ### SHA-256 checksums
 
 ```
-330b499c4cf931e42aa4d58841c57bc0d9b8dbe170886cc7d686e655e3c6af13  find-my-phone-watch-v0.12.0-debug.pbw
-85713212471ae5403cce34ba4e87799deb1436f643a989d11561f4639ca4259f  find-my-phone-companion-v0.12.0-debug.apk
+d09826b23c3e6ba3556f53705df99064a9715f28a61757a074571c507517fd57  find-my-phone-watch-v0.13.0-debug.pbw
+6cbd971db217401872e7cb844bd35176b81854edb81d7810c758d364e3565d59  find-my-phone-companion-v0.13.0-debug.apk
 ```
 
 Both were built and verified in this repo's CI-less sandbox environment
