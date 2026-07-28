@@ -143,8 +143,9 @@ script rather than hand-editing any output.
   credentials into `android/keystore.properties` and re-run
   `gradle bundleRelease`, or sign the existing `.aab` with just a JDK:
   `jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore
-  upload-keystore.jks <file>.aab <alias>`. Commands and checksums are in
-  `release/README.md`.
+  upload-keystore.jks <file>.aab <alias>` — the trailing alias is required,
+  and on PowerShell it has to be one line, since `\` doesn't continue a
+  command there. Commands and checksums are in `release/README.md`.
 - [x] **10. Signed release build tested on a real device** — covered by
   4b above; that was a release build with R8, signed and installed. Two
   differences remain in the final upload, neither behavioural: it will be

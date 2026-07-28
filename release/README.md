@@ -50,10 +50,22 @@ signed with nothing but a JDK — App Bundles use JAR signing:
 jarsigner -sigalg SHA256withRSA -digestalg SHA-256 \
   -keystore upload-keystore.jks \
   phonefinder-companion-v1.0.0-UNSIGNED.aab upload
-jarsigner -verify phonefinder-companion-v1.0.0-UNSIGNED.aab
+jarsigner -verify -verbose:summary phonefinder-companion-v1.0.0-UNSIGNED.aab
 ```
 
-(`upload` is the key alias — use whatever alias you created.)
+The trailing `upload` is the **key alias**, not a flag — omit it and
+jarsigner answers "Please specify alias name". Use whatever alias you
+created; `keytool -list -keystore upload-keystore.jks` prints the aliases in
+a keystore if you've forgotten.
+
+On Windows PowerShell, `\` is not a line continuation (its continuation
+character is a backtick), so run it as one line:
+
+```powershell
+jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore upload-keystore.jks phonefinder-companion-v1.0.0-UNSIGNED.aab upload
+```
+
+A successful verify prints `jar verified`.
 
 ### What's in the bundle
 
