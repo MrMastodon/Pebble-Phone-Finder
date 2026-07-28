@@ -33,6 +33,11 @@ what the dependencies actually need: the important one preserves all of
 and talks to the Pebble app over AIDL and Parcelables resolved by class
 name. See `docs/RELEASE.md` for what was verified.
 
+A signed release build with R8 has since been installed and exercised on
+a real watch and phone — the watch button round trip, the connection
+status line and the pinned-host line all work, so the keep rules are
+confirmed rather than merely reasoned about.
+
 `0.15.0-debug` renamed the app to **PhoneFinder**. It's treated as a
 brand name, so it stays English in the Norwegian UI too, while the words
 around it are still translated ("PhoneFinder-alarm"). The rename covers

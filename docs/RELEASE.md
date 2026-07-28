@@ -77,12 +77,14 @@ script rather than hand-editing any output.
   looked up by name. Resources, the alarm sound and the `nb` locale all
   survive (release builds shorten resource *file paths*, but the resource
   table keeps the real names — checked with `aapt2 dump resources`).
-- [ ] **4b. Test a minified build on the watch + phone.** **[you]** — this
-  is the part no amount of static checking replaces. Note that the debug
-  APKs in `release/` do **not** go through R8, so testing those proves
-  nothing about it: build a signed release (`gradle assembleRelease` once
-  you have your key) and exercise the full round trip, especially the watch
-  button, since that's the path through the kept IPC classes.
+- [x] **4b. Minified build tested on real hardware** — a signed release
+  build (R8 on) was installed and exercised end to end: the watch button
+  round trip, which is the path through the kept AIDL classes, plus the two
+  features backed by the only classes R8 did rename
+  (`DefaultPebbleInfoRetriever` behind the connection-status line and
+  `DefaultPebbleAndroidAppPicker` behind the pinned-host line). All worked,
+  including auto-pinning from a clean install. The keep rules are
+  confirmed good.
 - [ ] **5. Privacy policy — needs hosting.** **[you]** The text is written:
   [`docs/privacy-policy.md`](privacy-policy.md), saying exactly *"The
   application PhoneFinder does not collect or share any user data."* in
@@ -123,9 +125,14 @@ script rather than hand-editing any output.
   the last one uploaded.
 - [ ] **9. Build an App Bundle**, not an APK: `gradle bundleRelease`. Play
   requires `.aab` for new apps.
-- [ ] **10. Test the signed release build on a real device.** **[you]** —
-  only debug builds have been run so far, and R8 (if enabled) changes what
-  ships.
+- [x] **10. Signed release build tested on a real device** — covered by
+  4b above; that was a release build with R8, signed and installed. Two
+  differences remain in the final upload, neither behavioural: it will be
+  signed with your own key, and an App Bundle splits per ABI (this app
+  pulls in one native library, `libdatastore_shared_counter.so`, via
+  DataStore), so the device gets a slimmer artifact than the universal APK
+  that was tested. Worth one smoke test after the first internal-testing
+  install from Play, but the risk is low.
 - [ ] **11. Play Console — foreground service declaration.** **[you]** The
   app declares the `mediaPlayback` foreground service type; Play asks for a
   justification and often a demo video. Be ready to explain that the service
