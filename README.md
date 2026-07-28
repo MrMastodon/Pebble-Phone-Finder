@@ -92,17 +92,20 @@ Android `res/values-nb/` resource set. To add another language: watch
 add a case in `prv_text_for_state()` in `find_my_phone.c`, phone add
 another `res/values-<code>/strings.xml`.
 
-### On-device diagnostics
+### About screen and on-device diagnostics
 
-The phone app has a "Show diagnostics" button (hidden by default) that
-reveals a log of every `PebbleListenerService` callback received — app
-opened/closed, any message, even for a UUID that isn't ours — with
-timestamps, persisted across app restarts. It exists because there's no
-adb/logcat access in most real-world troubleshooting situations; if the
-watch shows its message was sent but nothing happens on the phone, this
-panel is the first place to check whether anything arrived at all. The
-watch side has matching feedback: it distinguishes "sent but not yet
-acknowledged by the phone" from "acknowledged" from "not connected" in its
+The phone app has an "About" button on the main screen that opens
+`AboutActivity` — app name/version, a "Developed by MrMastodon" credit,
+and a "Show diagnostics" button (hidden by default) that reveals a log of
+every `PebbleListenerService` callback received — app opened/closed, any
+message, even for a UUID that isn't ours — with timestamps, persisted
+across app restarts. It's kept off the main screen so it's out of the way
+of everyday use, but still reachable for troubleshooting: there's no
+adb/logcat access in most real-world situations, so if the watch shows its
+message was sent but nothing happens on the phone, this panel is the first
+place to check whether anything arrived at all. The watch side has
+matching feedback: it distinguishes "sent but not yet acknowledged by the
+phone" from "acknowledged" from "not connected" in its
 own status text (see `find_my_phone.c`).
 
 ### Does the companion app need to stay running in the background?

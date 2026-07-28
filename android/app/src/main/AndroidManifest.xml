@@ -23,6 +23,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false"
+            android:label="@string/about" />
+
         <service
             android:name=".FindPhoneService"
             android:foregroundServiceType="mediaPlayback"

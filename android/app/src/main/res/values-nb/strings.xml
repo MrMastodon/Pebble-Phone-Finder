@@ -23,4 +23,8 @@
     <string name="current_sound">Alarmlyd: %1$s</string>
     <string name="default_sound_name">Standard</string>
     <string name="reset_sound">Tilbakestill til standardlyd</string>
+
+    <string name="about">Om</string>
+    <string name="about_version">Versjon %1$s</string>
+    <string name="developed_by">Utviklet av MrMastodon</string>
 </resources>

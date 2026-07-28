@@ -53,11 +53,13 @@ class MainActivity : AppCompatActivity() {
         updateAlarmSoundText()
 
         binding.testAlarmButton.setOnClickListener { toggleTestAlarm() }
-        binding.toggleDiagnosticsButton.setOnClickListener { toggleDiagnosticsPanel() }
         binding.chooseSoundButton.setOnClickListener { launchSoundPicker() }
         binding.resetSoundButton.setOnClickListener {
             AlarmSoundPreference.set(applicationContext, null)
             updateAlarmSoundText()
+        }
+        binding.aboutButton.setOnClickListener {
+            startActivity(Intent(this, AboutActivity::class.java))
         }
     }
 
@@ -81,19 +83,6 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.current_sound, getString(R.string.default_sound_name))
         }
         binding.resetSoundButton.visibility = if (uri != null) View.VISIBLE else View.GONE
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.diagnosticsText.text = DiagnosticsLog.events(applicationContext)
-    }
-
-    private fun toggleDiagnosticsPanel() {
-        val showing = binding.diagnosticsPanel.visibility == View.VISIBLE
-        binding.diagnosticsPanel.visibility = if (showing) View.GONE else View.VISIBLE
-        binding.toggleDiagnosticsButton.setText(
-            if (showing) R.string.show_diagnostics else R.string.hide_diagnostics
-        )
     }
 
     private fun requestNotificationPermissionIfNeeded() {

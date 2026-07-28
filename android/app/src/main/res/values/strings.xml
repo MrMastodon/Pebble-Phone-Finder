@@ -23,4 +23,8 @@
     <string name="current_sound">Alarm sound: %1$s</string>
     <string name="default_sound_name">Default</string>
     <string name="reset_sound">Reset to default sound</string>
+
+    <string name="about">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="developed_by">Developed by MrMastodon</string>
 </resources>
