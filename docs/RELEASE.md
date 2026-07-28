@@ -63,8 +63,29 @@ script rather than hand-editing any output.
   `proguard-rules.pro` checked against PebbleKitAndroid2 and DataStore
   (both use reflection/serialization), and the result retested on a real
   device — a missing keep rule fails at runtime, not at build time.
-- [ ] **5. Privacy policy page.** **[here]** to draft, **[you]** to host.
-  Play requires a URL even for apps that collect nothing.
+- [ ] **5. Privacy policy — needs hosting.** **[you]** The text is written:
+  [`docs/privacy-policy.md`](privacy-policy.md), saying exactly *"The
+  application PhoneFinder does not collect or share any user data."* in
+  English and Norwegian, with the developer name and a date so it's
+  identifiable as a policy.
+
+  **Don't use the Google Drive `license.txt` file as the Play URL.** Its
+  sharing is correct (public, read-only) and the sentence is right, but
+  Play requires a policy that is on an active URL, readable in a standard
+  browser, and *clearly labelled as a privacy policy*. That file is called
+  `license.txt` — Drive shows the filename prominently — and renders inside
+  Drive's viewer rather than as a plain page. Both are common rejection
+  reasons.
+
+  Better, and free because this repo is public: enable **GitHub Pages**
+  (Settings → Pages → deploy from branch, `/docs` folder). The policy then
+  lives at a stable static URL like
+  `https://mrmastodon.github.io/Pebble-Phone-Finder/privacy-policy`, which
+  is non-editable by visitors and unambiguously a web page. Use that URL in
+  both the Play listing and the Rebble listing.
+
+  Optional: Play listings often carry a contact address. One isn't in the
+  file — add it yourself if you want it published.
 - [ ] **6. Store listing copy**: title, short and full description in NO and
   EN, to match the app's own localisation. **[here]** to draft.
 - [ ] **7. Screenshots.** **[you]** — the only listing assets not
