@@ -1,128 +1,104 @@
-# Prebuilt release artifacts
-
-Ready-to-install builds, so you don't have to set up the Pebble SDK or an
-Android build environment yourself. These are rebuilt from the source in
-`watch/` and `android/` in this repo — see the root `README.md` for how to
-build them yourself instead, and for the "vibe-coded" disclaimer that applies
-to everything here.
+# Release artifacts
 
 ## Versioning scheme
 
-- **Debug builds** (what's here right now) use a `0.x.y-debug` series: the
-  minor version bumps on every new debug build we ship (`0.1.0-debug` ->
-  `0.2.0-debug` -> ...). The watch app's `package.json` `version` field must
-  be strict `X.Y.Z` (pebble-tool rejects a `-debug` suffix there), so only
-  the release filename and the Android `versionName` carry the `-debug` tag
-  for the watch/phone pair.
-- **Release builds** (once there's an actual signed release, not just a
-  debug-keystore build) start a fresh series at `1.0.0`, independent of
-  wherever the debug series was left off.
+- **`versionName`** restarted at `1.0.0` for the first real release, after
+  the `0.x.y-debug` series used during development.
+- **`versionCode` did not restart with it.** It only ever counts upward —
+  Play rejects an upload whose `versionCode` isn't higher than the last one.
+  It carried on from the debug series, so `1.0.0` is `versionCode` 17.
+- The watch app's `package.json` `version` must be strict `X.Y.Z`;
+  pebble-tool rejects anything else, so it carries no suffix.
 
-## Current build: `0.16.0-debug`
+## 1.0.0 — the first release
 
-| File | What it is | Install with |
-|------|------------|---------------|
-| `phonefinder-watch-v0.16.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> phonefinder-watch-v0.16.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
-| `phonefinder-companion-v0.16.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install phonefinder-companion-v0.16.0-debug.apk` |
+| File | Where it is | Status |
+|------|-------------|--------|
+| `phonefinder-watch-v1.0.0.pbw` | here, in this folder | **Ready to publish** to the Rebble appstore as-is. Pebble apps aren't signed, so this is the finished article. |
+| `phonefinder-companion-v1.0.0-UNSIGNED.aab` | *not* in this repo | Built and verified, but **unsigned** — it needs the upload key, which lives only with the developer and must never be committed. Rebuild or sign it locally, see below. |
 
-`0.16.0-debug` turns on R8 for the **release** build type — which means
-the debug APK here is unchanged by it and cannot be used to test it. The
-release APK drops from 5.7 MB to 2.3 MB. Keep rules were written against
-what the dependencies actually need: the important one preserves all of
-`io.rebble.pebblekit2.**`, because it ships no consumer rules of its own
-and talks to the Pebble app over AIDL and Parcelables resolved by class
-name. See `docs/RELEASE.md` for what was verified.
+`versionCode 17` / `versionName 1.0.0`, verified from the merged manifest
+and from a built APK (`aapt2 dump badging`), not just from the build file.
 
-A signed release build with R8 has since been installed and exercised on
-a real watch and phone — the watch button round trip, the connection
-status line and the pinned-host line all work, so the keep rules are
-confirmed rather than merely reasoned about.
+### Why no ready-to-install Android download here
 
-`0.15.0-debug` renamed the app to **PhoneFinder**. It's treated as a
-brand name, so it stays English in the Norwegian UI too, while the words
-around it are still translated ("PhoneFinder-alarm"). The rename covers
-the launcher label, notification title and channel name, the watch's
-`displayName`, the text baked into both store banners, and these release
-filenames. Two things deliberately keep their old values: the
-`applicationId` (`com.pebblephonefinder.android`, which already reads
-"phonefinder" and is permanent once published) and the notification
-channel *ID* (changing it would discard the user's channel settings).
-See `docs/RELEASE.md`.
+Earlier versions of this folder carried a debug APK anyone could sideload.
+A release build can't work that way: it has to be signed with the upload
+key, and putting that key — or anything signed with it — in a public repo
+would hand over the ability to publish as this app. So the Android half now
+stops at "build it yourself, sign it with your own key".
 
-`0.14.0-debug` replaced every placeholder icon. The Android launcher
-icon and the notification icon were both system drawables - not
-publishable, and the notification one wasn't even a proper
-white-on-transparent silhouette. Both are now generated, along with the
-Play and Rebble listing icons and banners, from one shared motif
-(`tools/generate_assets.py`, see `store-assets/README.md`). The Pebble
-menu icon comes from the same generator now too, so the watch, the phone
-and both store listings can't drift apart.
+### Producing the signed bundle
 
-`0.13.0-debug` reviewed the code `0.12.0-debug` itself added. `PebbleHostApp`
-reached the PackageManager and DataStore on whichever thread called it, and
-the About screen called it from the main thread — the same ANR class that
-`0.12.0-debug` had just fixed elsewhere. The dispatcher is now forced inside
-those functions rather than left to callers. The host-app prompt is also
-dismissable now; declining leaves nothing pinned (the About screen says so)
-and asks again next launch.
+With the Android build environment set up, this is one step. Put the
+credentials in `android/keystore.properties` (gitignored — copy
+`keystore.properties.example`) and:
 
-`0.12.0-debug` finished the pre-release review with the remaining
-security and ANR items:
+```
+cd android
+gradle bundleRelease
+```
 
-- **Alarm delivery is pinned to one Pebble host app.** PebbleKitAndroid2
-  otherwise accepts messages from *any* installed app claiming to be a
-  Pebble host, so a malicious app could set off the alarm. The normal case
-  (exactly one host app installed) is pinned silently at startup, so
-  nothing changes for you; you're only prompted if there's genuine
-  ambiguity. **The About screen now shows which app is pinned** — that
-  line is the only way to confirm the lockdown is actually live, since
-  the alarm behaves identically either way.
-- Watch-connection status is collected off the main thread. The library
-  marks that call `@WorkerThread` and it goes over binder, so collecting
-  it on the main thread risked ANRs — a metric Play Console tracks.
-- Backup rules exclude the diagnostics log and the pinned-host-app state,
-  so neither is carried to the cloud or inherited by a new device.
+The output lands at `app/build/outputs/bundle/release/app-release.aab`,
+signed. The build prints a warning if it couldn't find the credentials and
+silently produces an unsigned bundle instead, so read that line.
 
-### Verifying the lockdown after installing
+Without an Android toolchain, an already-built unsigned `.aab` can be
+signed with nothing but a JDK — App Bundles use JAR signing:
 
-Open **About** and check the "Alarm accepted from" line. On a normal setup
-it should name the official Pebble app package (`coredevices.coreapp`). If
-it says nothing is pinned, the alarm still works but is not locked down.
+```
+jarsigner -sigalg SHA256withRSA -digestalg SHA-256 \
+  -keystore upload-keystore.jks \
+  phonefinder-companion-v1.0.0-UNSIGNED.aab upload
+jarsigner -verify phonefinder-companion-v1.0.0-UNSIGNED.aab
+```
 
-`0.11.0-debug` was a stability/robustness pass from the same review — no
-new features, but several crash and stuck-state paths closed:
+(`upload` is the key alias — use whatever alias you created.)
 
-- Raising or restoring the alarm volume no longer crashes when the OS
-  refuses it as a Do Not Disturb policy change (the app has no
-  `ACCESS_NOTIFICATION_POLICY`). The alarm now plays at whatever volume
-  is already set instead of taking the process down.
-- The service no longer starts a max-volume alarm off a null or unknown
-  intent (e.g. when the system recreates it).
-- Foreground-service starts are guarded against Android 12+'s background
-  start restriction; a refusal is logged to the About screen's
-  diagnostics instead of crashing.
-- Teardown now runs in a `finally`, so a failure mid-stop can't leak the
-  wake lock or strand the ongoing notification.
-- The alarm volume is restored even when no sound could be played at all
-  (previously it could be left pinned at max permanently).
-- `MediaPlayer` is released if `prepare()` fails, and a mid-playback
-  error now tears the alarm down instead of holding a wake lock for
-  silence.
-- Stop taps that arrive when the service isn't already in the foreground
-  no longer risk a `RemoteServiceException`.
-- Watch: the SELECT arrow's path is built once instead of on every
-  redraw, and the system locale is null-checked (Nynorsk and generic
-  `no` now get Norwegian text too).
+### What's in the bundle
+
+R8 is on for release builds: it strips the APK from 5.7 MB to 2.3 MB, and
+the bundle is 2.8 MB before Play splits it. Those splits are per-ABI —
+`arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64` — because DataStore pulls in one
+native library, so a real device downloads noticeably less than any of
+these numbers.
+
+The R8 keep rules were validated on real hardware; see `docs/RELEASE.md`.
 
 ### SHA-256 checksums
 
 ```
-1eda97296fba6569248d9b479b587307235f4e5b1365c935025c9089f3fa2da9  phonefinder-watch-v0.16.0-debug.pbw
-e5889f670a617c9ad83e32b7b1f9a578cd0966c56bdbc9fd986b5914dcce8682  phonefinder-companion-v0.16.0-debug.apk
+2197481bbeaf326ce8b18d757b7c6666dd7a1480332bc95b896825cb50296ae9  phonefinder-watch-v1.0.0.pbw
+7e9a14874b180030cfaee0447a2bcf8582058a626b6990545d30800ced2c2650  phonefinder-companion-v1.0.0-UNSIGNED.aab
 ```
 
-Both were built and verified in this repo's CI-less sandbox environment
-(`pebble build` for the watchapp, `gradle assembleDebug` for the APK) — see
-the root README for exact toolchain versions used. Neither has been
-installed on real hardware by the person building them; see the "Known
-limitations" section of the root README.
+The `.aab` checksum is for the unsigned bundle as built here. Signing
+changes the file, so it won't match afterwards — that's expected.
+
+## History
+
+Development ran through a `0.x.y-debug` series. The notable steps:
+
+- **0.16.0** — R8 enabled for release builds, with keep rules written
+  against what PebbleKitAndroid2 actually needs. It ships no consumer
+  rules of its own while doing IPC across AIDL and Parcelables resolved by
+  class name, so renaming them would have failed silently at runtime.
+  Validated on real hardware.
+- **0.15.0** — renamed to **PhoneFinder**, treated as a brand name and left
+  untranslated in the Norwegian UI. The `applicationId` and the
+  notification channel *ID* deliberately kept their old values.
+- **0.14.0** — replaced the placeholder icons. The launcher and
+  notification icons had been system drawables; all icons and store banners
+  are now generated from one motif by `tools/generate_assets.py`.
+- **0.13.0** — reviewed the code 0.12.0 added, and moved a PackageManager
+  call off the main thread.
+- **0.12.0** — pinned alarm delivery to a single Pebble host app, moved
+  watch-connection polling off the main thread, added backup rules.
+- **0.11.0** — closed the crash and stuck-state paths found in a code
+  review: a Do Not Disturb `SecurityException` that took the process down,
+  a null intent that could start a max-volume alarm, an unguarded
+  foreground-service start, a wake lock that leaked if teardown threw, and
+  a `MediaPlayer` leak.
+- **0.3.0** — fixed the bug that stopped the whole thing working: the
+  watch's `dict_write_uint8()` arrives as `UInt32`, not `UInt8`, so the
+  command was silently dropped.

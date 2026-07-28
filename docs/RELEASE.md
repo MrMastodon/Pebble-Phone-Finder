@@ -128,12 +128,23 @@ script rather than hand-editing any output.
   the Play and Rebble consoles; there's no need to commit them, though
   `store-assets/screenshots/` is there if you'd rather keep a copy with
   everything else.
-- [ ] **8. Switch to the 1.0.0 release series.** `versionName = "1.0.0"`,
-  with `versionCode` continuing upward from where the debug series ended —
-  never back down to 1. Play rejects a `versionCode` that isn't higher than
-  the last one uploaded.
-- [ ] **9. Build an App Bundle**, not an APK: `gradle bundleRelease`. Play
-  requires `.aab` for new apps.
+- [x] **8. Switched to the 1.0.0 release series.** `versionName = "1.0.0"`
+  with `versionCode = 17`, carrying on from the debug series rather than
+  restarting — Play rejects a `versionCode` that isn't higher than the last
+  upload. Verified from the merged manifest and `aapt2 dump badging` on a
+  built APK, not just from the build file.
+- [x] **9a. App Bundle builds clean.** `gradle bundleRelease` produces a
+  2.8 MB `.aab` that splits per ABI (`arm64-v8a`, `armeabi-v7a`, `x86`,
+  `x86_64` — DataStore pulls in a native library), so a device downloads
+  less than that.
+- [ ] **9b. Sign the bundle and upload it.** **[you]** — the bundle built
+  here is unsigned, because the upload key is yours alone and neither it
+  nor anything signed with it belongs in a public repo. Either drop your
+  credentials into `android/keystore.properties` and re-run
+  `gradle bundleRelease`, or sign the existing `.aab` with just a JDK:
+  `jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore
+  upload-keystore.jks <file>.aab <alias>`. Commands and checksums are in
+  `release/README.md`.
 - [x] **10. Signed release build tested on a real device** — covered by
   4b above; that was a release build with R8, signed and installed. Two
   differences remain in the final upload, neither behavioural: it will be

@@ -24,9 +24,14 @@ be.
 
 ## Prebuilt binaries
 
-Don't want to set up the Pebble SDK or an Android build environment? Ready
-built artifacts (a `.pbw` for the watch, a debug `.apk` for the phone) are in
-[`release/`](release/), with checksums and install instructions.
+The watch app ships built: [`release/`](release/) holds
+`phonefinder-watch-v1.0.0.pbw`, ready to install, with its checksum.
+
+The Android half stops at "build it yourself". From 1.0.0 on it's a release
+build, and a release build has to be signed with the upload key — putting
+that key, or anything signed with it, in a public repo would hand over the
+ability to publish as this app. `release/README.md` has the two ways to
+produce a signed bundle.
 
 ## How it works
 
@@ -268,7 +273,7 @@ watch/              Pebble C watchapp (pebble-tool project, emery only)
 android/            Android companion app (Gradle project)
 tools/              Asset generator for both apps and both store listings
 store-assets/       Generated store icons and banners (see its README)
-release/            Prebuilt .pbw / .apk, with checksums (see release/README.md)
+release/            Prebuilt .pbw, checksums, signing steps (see release/README.md)
 ```
 
 ## Publishing
