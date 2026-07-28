@@ -42,22 +42,25 @@ script rather than hand-editing any output.
 
 ## Decisions to make before the first upload
 
-- [ ] **1. The `applicationId`** *(permanent once published)*. **[you]**
-  Currently `com.pebblephonefinder.android`, which already reads
-  "phonefinder", so it was left alone. Changing it now is free but touches
+- [x] **1. The `applicationId` stays `com.pebblephonefinder.android`** —
+  decided, and now locked in for good once the first upload happens.
+  It already reads "phonefinder". Changing it would have touched
   the manifest, the Kotlin package, and — easy to miss — the
   `companionApp.android.apps` package in `watch/package.json`, which is what
-  routes watch messages to the phone. Out of sync there and the alarm
-  silently stops working. Changing it *after* publishing is impossible: Play
-  treats a new `applicationId` as a different app, losing the listing,
-  installs and reviews. **Recommendation: keep it.**
-- [ ] **2. Check the name isn't taken** on Google Play and the Rebble
-  appstore before committing to it publicly. **[you]**
+  routes watch messages to the phone — out of sync there and the alarm
+  silently stops working.
+- [x] **2. Name checked.** "PhoneFinder" is free on Google Play. The Rebble
+  appstore has a *"Phone Finder"* (two words) last updated in 2017 — a
+  different string, so it isn't a collision, but anyone searching "phone
+  finder" there will see both. Worth knowing when writing the Rebble
+  listing; not a blocker.
 
 ## Android — Google Play
 
-- [ ] **3. Generate the upload key** and back it up. **[you]** — it's a
-  credential you must own; see the warning below.
+- [x] **3. Upload key generated** and held by the developer. It is
+  deliberately not in this repo and never should be — `keystore.properties`
+  and `*.jks` are gitignored. Back up the file *and* its passwords
+  somewhere you won't lose them; see the warning below.
 - [x] **4a. R8/minify enabled**, with rules written against what the
   dependencies actually need rather than guesswork. Release APK went from
   5.7 MB to 2.3 MB. Resource shrinking is deliberately left off — it strips
@@ -85,29 +88,34 @@ script rather than hand-editing any output.
   `DefaultPebbleAndroidAppPicker` behind the pinned-host line). All worked,
   including auto-pinning from a clean install. The keep rules are
   confirmed good.
-- [ ] **5. Privacy policy — needs hosting.** **[you]** The text is written:
-  [`docs/privacy-policy.md`](privacy-policy.md), saying exactly *"The
-  application PhoneFinder does not collect or share any user data."* in
-  English and Norwegian, with the developer name and a date so it's
-  identifiable as a policy.
+- [x] **5. Privacy policy published** via GitHub Pages, as a standalone
+  HTML page: [`docs/privacy-policy.html`](privacy-policy.html). It says
+  exactly *"The application PhoneFinder does not collect or share any user
+  data."* in English and Norwegian, with the developer name and a date so
+  it reads as a policy rather than a loose sentence.
 
-  **Don't use the Google Drive `license.txt` file as the Play URL.** Its
-  sharing is correct (public, read-only) and the sentence is right, but
-  Play requires a policy that is on an active URL, readable in a standard
-  browser, and *clearly labelled as a privacy policy*. That file is called
-  `license.txt` — Drive shows the filename prominently — and renders inside
-  Drive's viewer rather than as a plain page. Both are common rejection
-  reasons.
+  It's HTML, not Markdown, on purpose: Pages serves a `.md` file without
+  YAML front matter as raw text, and Play wants a policy readable as a page
+  in a standard browser. No external fonts, scripts or trackers either —
+  poor look on a privacy policy, and it keeps the page working forever.
+  `docs/index.html` is a small landing page so the Pages root isn't a 404;
+  use it for the "website" field in both store listings.
 
-  Better, and free because this repo is public: enable **GitHub Pages**
-  (Settings → Pages → deploy from branch, `/docs` folder). The policy then
-  lives at a stable static URL like
-  `https://mrmastodon.github.io/Pebble-Phone-Finder/privacy-policy`, which
-  is non-editable by visitors and unambiguously a web page. Use that URL in
-  both the Play listing and the Rebble listing.
+  **The URL depends on which source you picked in Settings → Pages:**
 
-  Optional: Play listings often carry a contact address. One isn't in the
-  file — add it yourself if you want it published.
+  | Pages source | Privacy policy URL |
+  |---|---|
+  | Branch + `/docs` folder | `https://mrmastodon.github.io/Pebble-Phone-Finder/privacy-policy.html` |
+  | Branch + `/` root | `https://mrmastodon.github.io/Pebble-Phone-Finder/docs/privacy-policy.html` |
+
+  Open it in a private window before pasting it into Play — that confirms
+  it's reachable without being logged in, which is the thing reviewers
+  check. Don't use the Google Drive `license.txt` file: it's named as a
+  licence, and renders in Drive's viewer rather than as a page. Both are
+  common rejection reasons.
+
+  Optional: Play listings often carry a contact address. There isn't one on
+  the page — add it yourself if you want it published.
 - [x] **6. Store listing copy** — written, ready to paste:
   [`store-assets/listing-copy.md`](../store-assets/listing-copy.md). Title,
   short and full description for Play in both en-US and nb-NO, plus a
@@ -116,9 +124,10 @@ script rather than hand-editing any output.
   the text. **[you]** to paste in and to decide on the title question noted
   at the top of that file (whether to risk "PhoneFinder for Pebble" for
   the extra search term).
-- [ ] **7. Screenshots.** **[you]** — the only listing assets not
-  generated, because both stores want real captures. Sizes and suggested
-  shots are in `store-assets/README.md`.
+- [x] **7. Screenshots captured** on real hardware. They go straight into
+  the Play and Rebble consoles; there's no need to commit them, though
+  `store-assets/screenshots/` is there if you'd rather keep a copy with
+  everything else.
 - [ ] **8. Switch to the 1.0.0 release series.** `versionName = "1.0.0"`,
   with `versionCode` continuing upward from where the debug series ended —
   never back down to 1. Play rejects a `versionCode` that isn't higher than

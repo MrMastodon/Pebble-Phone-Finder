@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhoneFinder</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 4rem;
+    color: #1c202c;
+    background: #ffffff;
+  }
+  h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+  .tagline { font-size: 1.15rem; color: #5b6072; margin-top: 0; }
+  h2 { font-size: 1.15rem; margin-top: 2.25rem; }
+  ul { padding-left: 1.25rem; }
+  footer {
+    margin-top: 3rem; padding-top: 1.25rem;
+    border-top: 1px solid #d9dbe3; font-size: 0.9rem; color: #5b6072;
+  }
+  a { color: #b35f00; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e9eaf0; background: #1c202c; }
+    .tagline, footer { color: #a3a8ba; }
+    footer { border-top-color: #343a4d; }
+    a { color: #ff9500; }
+  }
+</style>
+</head>
+<body>
+
+<h1>PhoneFinder</h1>
+<p class="tagline">Ring your phone from your Pebble watch — loud, even when it&rsquo;s on silent.</p>
+
+<p>
+  Most find-my-phone watchapps play a media sound at whatever volume happens
+  to be set, which is no help if the phone is muted. PhoneFinder rings
+  through the phone&rsquo;s dedicated alarm channel at full volume instead,
+  the same way an alarm clock still wakes you when the phone is silent.
+</p>
+
+<h2>What you need</h2>
+<ul>
+  <li>A Pebble Time 2 or Core Time 2 watch</li>
+  <li>The official Pebble app, with your watch paired</li>
+  <li>Both halves of PhoneFinder: the watchapp and the Android companion app</li>
+</ul>
+
+<h2>Good to know</h2>
+<p>
+  Do Not Disturb set to total silence is enforced by Android itself, and no
+  ordinary app can override it. In that mode PhoneFinder plays at whatever
+  volume the system allows.
+</p>
+
+<footer>
+  <p>
+    <a href="privacy-policy.html">Privacy policy</a> &middot;
+    <a href="https://github.com/MrMastodon/Pebble-Phone-Finder">Source code on GitHub</a>
+  </p>
+  <p>By MrMastodon</p>
+</footer>
+
+</body>
+</html>
