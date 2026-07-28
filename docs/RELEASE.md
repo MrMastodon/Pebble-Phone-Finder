@@ -137,9 +137,11 @@ script rather than hand-editing any output.
   2.8 MB `.aab` that splits per ABI (`arm64-v8a`, `armeabi-v7a`, `x86`,
   `x86_64` — DataStore pulls in a native library), so a device downloads
   less than that.
-- [ ] **9b. Sign the bundle and upload it.** **[you]** — the bundle built
-  here is unsigned, because the upload key is yours alone and neither it
-  nor anything signed with it belongs in a public repo. Either drop your
+- [ ] **9b. Sign the bundle and upload it.** **[you]** — *signing done:
+  the 1.0.0 bundle is signed with the upload key and `jarsigner -verify`
+  reports `jar verified`. What remains is the upload itself.* The bundle
+  built here is unsigned, because the upload key is yours alone and neither
+  it nor anything signed with it belongs in a public repo. Either drop your
   credentials into `android/keystore.properties` and re-run
   `gradle bundleRelease`, or sign the existing `.aab` with just a JDK:
   `jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore
@@ -154,15 +156,21 @@ script rather than hand-editing any output.
   DataStore), so the device gets a slimmer artifact than the universal APK
   that was tested. Worth one smoke test after the first internal-testing
   install from Play, but the risk is low.
+Answers for items 11–13 below are written out and ready to paste in
+[`store-assets/play-console-answers.md`](../store-assets/play-console-answers.md),
+along with the other declarations Play asks for along the way (ads, IAP,
+app access, category) and a note on the 12-tester closed-testing rule that
+gates production access for personal developer accounts.
+
 - [ ] **11. Play Console — foreground service declaration.** **[you]** The
   app declares the `mediaPlayback` foreground service type; Play asks for a
-  justification and often a demo video. Be ready to explain that the service
-  plays a user-triggered alarm tone.
-- [ ] **12. Play Console — Data safety form.** **[you]** The app collects
-  and transmits nothing; the diagnostics log stays on the device and is
-  excluded from backup. Answer accordingly.
+  justification and usually a demo video showing the alarm start and stop.
+- [ ] **12. Play Console — Data safety form.** **[you]** Answer "no data
+  collected or shared": there is no `INTERNET` permission at all, and the
+  diagnostics log stays on the device and is excluded from backup.
 - [ ] **13. Content rating questionnaire** and target-audience declaration.
-  **[you]**
+  **[you]** Every content question is "no"; pick an adult age band so the
+  app stays out of the Families programme.
 
 ## Pebble — Rebble appstore
 
