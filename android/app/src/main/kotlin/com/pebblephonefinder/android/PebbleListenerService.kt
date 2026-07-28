@@ -1,6 +1,7 @@
 package com.pebblephonefinder.android
 
 import android.content.Intent
+import android.util.Log
 import androidx.core.content.ContextCompat
 import io.rebble.pebblekit2.client.BasePebbleListenerService
 import io.rebble.pebblekit2.common.model.PebbleDictionary
@@ -46,6 +47,19 @@ class PebbleListenerService : BasePebbleListenerService() {
 
     private fun sendServiceAction(action: String) {
         val intent = Intent(this, FindPhoneService::class.java).apply { this.action = action }
-        ContextCompat.startForegroundService(this, intent)
+        try {
+            ContextCompat.startForegroundService(this, intent)
+        } catch (e: Exception) {
+            // Android 12+ refuses foreground-service starts from the
+            // background unless an exemption applies (here: the Pebble app
+            // waking us). Record it where the user can actually see it - the
+            // About screen's diagnostics - instead of crashing.
+            Log.e(TAG, "Could not start FindPhoneService for $action", e)
+            DiagnosticsLog.record(this, "Could not start alarm: ${e.javaClass.simpleName}")
+        }
+    }
+
+    private companion object {
+        const val TAG = "PebbleListenerService"
     }
 }

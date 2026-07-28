@@ -12,6 +12,7 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
+import android.util.Log
 import androidx.core.app.NotificationCompat
 
 /**
@@ -29,6 +30,7 @@ class FindPhoneService : Service() {
         const val ACTION_START_ALARM = "com.pebblephonefinder.android.action.START_ALARM"
         const val ACTION_STOP_ALARM = "com.pebblephonefinder.android.action.STOP_ALARM"
 
+        private const val TAG = "FindPhoneService"
         private const val NOTIFICATION_CHANNEL_ID = "find_my_phone_alarm"
         private const val NOTIFICATION_ID = 1
     }
@@ -39,14 +41,37 @@ class FindPhoneService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        alarmPlayer = AlarmPlayer(applicationContext)
+        alarmPlayer = AlarmPlayer(applicationContext) {
+            // Playback died mid-alarm - tear down rather than sit in the
+            // foreground holding a wake lock for silence.
+            Log.w(TAG, "Playback failed mid-alarm, stopping")
+            stopAlarm()
+        }
         createNotificationChannel()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // startForegroundService() promises the system that startForeground()
+        // follows promptly. That promise applies on the stop path too, so call
+        // it up front - otherwise a Stop tap that arrives when the service
+        // isn't already in the foreground gets us killed with a
+        // RemoteServiceException.
+        try {
+            startForeground(NOTIFICATION_ID, buildNotification())
+        } catch (e: Exception) {
+            // Android 12+ can refuse a foreground start from the background.
+            // Nothing useful left to do, but crashing helps no one.
+            Log.e(TAG, "Could not enter the foreground", e)
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
         when (intent?.action) {
-            ACTION_STOP_ALARM -> stopAlarm()
-            else -> startAlarm()
+            ACTION_START_ALARM -> startAlarm()
+            // Anything else - including the null intent the system hands us
+            // when it recreates the service - tears down. Never start a
+            // max-volume alarm off an intent nobody explicitly sent.
+            else -> stopAlarm()
         }
         return START_NOT_STICKY
     }
@@ -59,23 +84,38 @@ class FindPhoneService : Service() {
     }
 
     private fun startAlarm() {
-        startForeground(NOTIFICATION_ID, buildNotification())
-
         if (alarmPlayer.isPlaying) return // already running: no-op
 
         acquireWakeLock()
         requestAudioFocus()
-        alarmPlayer.start()
+        try {
+            alarmPlayer.start()
+        } catch (e: Exception) {
+            Log.e(TAG, "Couldn't start alarm", e)
+            stopAlarm()
+            return
+        }
+        if (!alarmPlayer.isPlaying) {
+            // No sound source could be opened at all - don't hold the
+            // foreground service and wake lock for nothing.
+            Log.w(TAG, "Alarm produced no playable sound, stopping")
+            stopAlarm()
+        }
     }
 
     private fun stopAlarm() {
-        if (alarmPlayer.isPlaying) {
-            alarmPlayer.stop()
+        try {
+            alarmPlayer.stop() // idempotent; also restores the alarm volume
+        } catch (e: Exception) {
+            Log.w(TAG, "Error while stopping playback", e)
+        } finally {
+            // Must run even if teardown above threw, or we leak the wake lock
+            // and leave an un-dismissable notification behind.
+            releaseAudioFocus()
+            releaseWakeLock()
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
         }
-        releaseAudioFocus()
-        releaseWakeLock()
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
     }
 
     private fun acquireWakeLock() {

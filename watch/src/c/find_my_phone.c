@@ -16,6 +16,14 @@ static Window *s_window;
 static TextLayer *s_status_layer;
 static TextLayer *s_bt_status_layer;
 static Layer *s_select_arrow_layer;
+static GPath *s_select_arrow_path;
+
+// Right-pointing triangle, relative to its own origin; positioned with
+// gpath_move_to() once the window bounds are known.
+static const GPathInfo SELECT_ARROW_PATH_INFO = {
+  .num_points = 3,
+  .points = (GPoint []) { {0, -12}, {0, 12}, {18, 0} },
+};
 
 static AppState s_state = STATE_IDLE;
 static bool s_is_norwegian = false;
@@ -89,27 +97,15 @@ static void prv_click_config_provider(void *context) {
 
 // Draws a right-pointing triangle at the vertical height of the physical
 // SELECT button, near the screen's right edge - a visual cue for which
-// button to press, without needing a separate icon resource.
+// button to press, without needing a separate icon resource. The path is
+// built once in prv_window_load rather than per frame, so a redraw never
+// allocates (and never risks drawing a NULL path if allocation failed).
 static void prv_select_arrow_update_proc(Layer *layer, GContext *ctx) {
-  GRect bounds = layer_get_bounds(layer);
-  int16_t mid_y = bounds.size.h / 2;
-  int16_t right_x = bounds.size.w;
-
-  GPoint points[3] = {
-    { (int16_t)(right_x - 22), (int16_t)(mid_y - 12) },
-    { (int16_t)(right_x - 22), (int16_t)(mid_y + 12) },
-    { (int16_t)(right_x - 4), mid_y },
-  };
-  GPathInfo path_info = {
-    .num_points = 3,
-    .points = points,
-  };
-  GPath *path = gpath_create(&path_info);
-
+  if (s_select_arrow_path == NULL) {
+    return;
+  }
   graphics_context_set_fill_color(ctx, GColorOrange);
-  gpath_draw_filled(ctx, path);
-
-  gpath_destroy(path);
+  gpath_draw_filled(ctx, s_select_arrow_path);
 }
 
 static void prv_window_load(Window *window) {
@@ -126,6 +122,12 @@ static void prv_window_load(Window *window) {
   text_layer_set_font(s_status_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   layer_add_child(window_layer, text_layer_get_layer(s_status_layer));
 
+  s_select_arrow_path = gpath_create(&SELECT_ARROW_PATH_INFO);
+  if (s_select_arrow_path != NULL) {
+    gpath_move_to(s_select_arrow_path,
+                  GPoint((int16_t)(bounds.size.w - 22), (int16_t)(bounds.size.h / 2)));
+  }
+
   s_select_arrow_layer = layer_create(bounds);
   layer_set_update_proc(s_select_arrow_layer, prv_select_arrow_update_proc);
   layer_add_child(window_layer, s_select_arrow_layer);
@@ -138,6 +140,10 @@ static void prv_window_unload(Window *window) {
   text_layer_destroy(s_bt_status_layer);
   text_layer_destroy(s_status_layer);
   layer_destroy(s_select_arrow_layer);
+  if (s_select_arrow_path != NULL) {
+    gpath_destroy(s_select_arrow_path);
+    s_select_arrow_path = NULL;
+  }
 }
 
 static void prv_outbox_sent_handler(DictionaryIterator *iterator, void *context) {
@@ -160,9 +166,14 @@ static void prv_outbox_failed_handler(DictionaryIterator *iterator, AppMessageRe
 
 static void prv_init(void) {
   // e.g. "nb", "nb_NO" for Norwegian Bokmal - matched by prefix since the
-  // exact suffix/region can vary.
+  // exact suffix/region can vary. "nn" (Nynorsk) and the generic "no" get
+  // the same strings. NULL-checked: the API is documented to return a
+  // string, but a null here would be a crash on the very first line.
   const char *locale = i18n_get_system_locale();
-  s_is_norwegian = (strncmp(locale, "nb", 2) == 0);
+  s_is_norwegian = (locale != NULL) &&
+                   (strncmp(locale, "nb", 2) == 0 ||
+                    strncmp(locale, "nn", 2) == 0 ||
+                    strncmp(locale, "no", 2) == 0);
 
   app_message_register_outbox_sent(prv_outbox_sent_handler);
   app_message_register_outbox_failed(prv_outbox_failed_handler);

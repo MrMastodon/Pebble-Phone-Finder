@@ -28,4 +28,5 @@
     <string name="about_version">Versjon %1$s</string>
     <string name="developed_by">Utviklet av MrMastodon</string>
     <string name="buy_me_coffee">Spander en kaffe på meg</string>
+    <string name="no_browser">Fant ingen nettleser til å åpne donasjonssiden.</string>
 </resources>

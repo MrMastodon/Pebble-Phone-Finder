@@ -1,9 +1,11 @@
 package com.pebblephonefinder.android
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pebblephonefinder.android.databinding.ActivityAboutBinding
 
@@ -24,7 +26,12 @@ class AboutActivity : AppCompatActivity() {
         binding.versionText.text = getString(R.string.about_version, BuildConfig.VERSION_NAME)
         binding.toggleDiagnosticsButton.setOnClickListener { toggleDiagnosticsPanel() }
         binding.buyMeCoffeeButton.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BUY_ME_COFFEE_URL)))
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BUY_ME_COFFEE_URL)))
+            } catch (e: ActivityNotFoundException) {
+                // No browser installed to handle https.
+                Toast.makeText(this, R.string.no_browser, Toast.LENGTH_LONG).show()
+            }
         }
     }
 

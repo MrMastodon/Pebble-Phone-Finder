@@ -83,9 +83,9 @@ own 25x25 PNG at that path.
 
 ### Localization
 
-Both apps default to English and switch to Norwegian (Bokmål) when the
-device's system language is Norwegian — no manual toggle. The watch checks
-`i18n_get_system_locale()` at startup and picks between two hardcoded
+Both apps default to English and switch to Norwegian when the device's
+system language is Norwegian (`nb`, `nn` or `no`) — no manual toggle. The
+watch checks `i18n_get_system_locale()` at startup and picks between two hardcoded
 string tables (Pebble's SDK generation has no string-resource localization
 system, so this is a plain runtime switch); the phone app uses a standard
 Android `res/values-nb/` resource set. To add another language: watch
@@ -214,7 +214,10 @@ watch, phone, and the official Pebble app; see Known limitations below.
 - **Total "Do Not Disturb" silence** is an OS-level restriction this app
   cannot bypass without you separately granting it Notification Policy
   Access — it is not something a normal app can silently override, and this
-  project doesn't try to.
+  project doesn't try to. Under DND the OS may also refuse the alarm-volume
+  raise outright (it counts as a DND policy change without
+  `ACCESS_NOTIFICATION_POLICY`); the app handles that refusal and still
+  plays at whatever volume is already set, rather than failing entirely.
 - **Battery optimization / OEM restrictions** — see "Does the companion app
   need to stay running in the background?" above.
 - **Wake lock safety cap**: `FindPhoneService` holds its wake lock for up to
