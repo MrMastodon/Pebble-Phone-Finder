@@ -13,6 +13,12 @@ That script also writes the in-app assets — the Android launcher and
 notification icons under `android/app/src/main/res/`, and the Pebble menu
 icon at `watch/resources/images/icon.png` — so don't hand-edit those either.
 
+The listing text lives alongside the graphics in
+[`listing-copy.md`](listing-copy.md) — Play title/short/full description in
+English and Norwegian, plus a Rebble description. Run
+`python3 tools/check_listing_copy.py` after editing it to confirm every
+field still fits Play's 30/80/4000 character limits.
+
 ## Preview
 
 | | |

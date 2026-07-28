@@ -86,8 +86,14 @@ script rather than hand-editing any output.
 
   Optional: Play listings often carry a contact address. One isn't in the
   file — add it yourself if you want it published.
-- [ ] **6. Store listing copy**: title, short and full description in NO and
-  EN, to match the app's own localisation. **[here]** to draft.
+- [x] **6. Store listing copy** — written, ready to paste:
+  [`store-assets/listing-copy.md`](../store-assets/listing-copy.md). Title,
+  short and full description for Play in both en-US and nb-NO, plus a
+  shorter watch-first description for Rebble. Verified against Play's
+  30/80/4000 limits by `tools/check_listing_copy.py`; re-run it if you edit
+  the text. **[you]** to paste in and to decide on the title question noted
+  at the top of that file (whether to risk "PhoneFinder for Pebble" for
+  the extra search term).
 - [ ] **7. Screenshots.** **[you]** — the only listing assets not
   generated, because both stores want real captures. Sizes and suggested
   shots are in `store-assets/README.md`.
