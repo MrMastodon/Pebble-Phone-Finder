@@ -77,9 +77,12 @@ separate icon submitted through an appstore listing, which doesn't apply
 to a sideloaded, non-appstore-published app like this one. If it stays
 blank there after a clean reinstall, that's most likely a limitation of
 the current Pebble mobile app version for sideloaded apps rather than
-something fixable from this project's side. Regenerate the icon with
-`watch/resources/images/generate_icon.py` (needs Pillow) or swap in your
-own 25x25 PNG at that path.
+something fixable from this project's side.
+
+That icon, the Android launcher and notification icons, and both stores'
+listing assets are all generated from one motif by
+`tools/generate_assets.py` — see `store-assets/README.md`. Don't hand-edit
+the outputs; change the script and re-run it.
 
 ### Localization
 
@@ -262,6 +265,8 @@ docs/PROTOCOL.md   Shared UUID + AppMessage key/value contract
 docs/RELEASE.md    Checklist for publishing to Play / the Rebble appstore
 watch/              Pebble C watchapp (pebble-tool project, emery only)
 android/            Android companion app (Gradle project)
+tools/              Asset generator for both apps and both store listings
+store-assets/       Generated store icons and banners (see its README)
 release/            Prebuilt .pbw / .apk, with checksums (see release/README.md)
 ```
 

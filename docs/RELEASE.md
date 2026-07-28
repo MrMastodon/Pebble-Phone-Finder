@@ -12,12 +12,14 @@ for the versioning scheme.
   is present. See "Signing a release build" below.
 - [ ] **2. Generate the upload key** and record it somewhere safe. This is
   yours to create and keep — see the warning below.
-- [ ] **3. Replace the launcher icon.** The app currently uses
-  `@android:drawable/ic_lock_silent_mode_off`, a *system* drawable. That is
-  not acceptable for a published app: it's low resolution, it isn't a real
-  adaptive icon, and its appearance is not guaranteed across OEMs or OS
-  versions. Needs a proper adaptive icon (foreground/background layers) plus
-  a 512×512 PNG for the store listing.
+- [x] **3. Real launcher and notification icons.** Replaced the system
+  drawables with a generated adaptive icon (foreground/background layers at
+  all densities, sized to survive a circular mask) and a proper
+  white-on-transparent notification silhouette. All store icons and banners
+  are generated too — see `store-assets/README.md`.
+- [ ] **3b. Screenshots.** The only listing assets not generated, because
+  both stores want real captures. Sizes and suggested shots are in
+  `store-assets/README.md`.
 - [ ] **4. Switch to the 1.0.0 release series.** `versionName = "1.0.0"`,
   and `versionCode` continuing upward from wherever the debug series ended
   — never back down to 1. Play rejects a `versionCode` that isn't higher
