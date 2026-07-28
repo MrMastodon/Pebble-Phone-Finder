@@ -1,4 +1,4 @@
-# Pebble Phone Finder
+# PhoneFinder
 
 > **⚠️ Vibe-coded project.** Every line of code, config, and this README was
 > written by an AI coding assistant (Claude) from a conversational prompt, not
@@ -15,7 +15,7 @@
 > utprøvd på ekte klokke/telefon av et menneske. Les, vurder og test selv før
 > du stoler på det — særlig de ferdigbygde filene i `release/`.)*
 
-A "Find My Phone" pair for the Pebble Time 2 (sold today as **Core Time 2** by
+A "find my phone" pair for the Pebble Time 2 (sold today as **Core Time 2** by
 Core Devices): a one-button watch app plus an Android companion app that
 plays a loud, looping alarm on the phone **regardless of the phone's volume
 or silent-mode setting** — unlike existing Pebble find-my-phone watchapps,
@@ -106,7 +106,7 @@ locked down after.
 Two details of the library's picker shape this:
 
 - `enableAutoSelect` is an **in-memory** field that resets to `true` on
-  every process start, so it has to be set from `FindMyPhoneApplication`,
+  every process start, so it has to be set from `PhoneFinderApplication`,
   not an Activity. The Pebble app can cold start our process straight into
   `PebbleListenerService` with no Activity ever running — set it anywhere
   else and everything still *works*, you're just not actually protected.

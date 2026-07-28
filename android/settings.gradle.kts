@@ -15,5 +15,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "find-my-phone-companion"
+rootProject.name = "phonefinder"
 include(":app")

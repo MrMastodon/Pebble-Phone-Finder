@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
  * Two things about the library's picker drive the design here:
  *
  * 1. `enableAutoSelect` is an in-memory field that resets to `true` on every
- *    process start, so it must be set from [FindMyPhoneApplication] rather
+ *    process start, so it must be set from [PhoneFinderApplication] rather
  *    than an Activity — the Pebble app can cold start our process straight
  *    into the listener service without any Activity ever running.
  * 2. The *selection* itself is persisted (in the library's own DataStore),
@@ -39,7 +39,7 @@ object PebbleHostApp {
 
     /**
      * Locks delivery down to one host app. Call from
-     * [FindMyPhoneApplication.onCreate].
+     * [PhoneFinderApplication.onCreate].
      *
      * The lockdown itself is applied synchronously, so we're never briefly
      * permissive; only the convenience auto-pin runs in the background. Worst

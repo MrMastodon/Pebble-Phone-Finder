@@ -31,6 +31,10 @@ class FindPhoneService : Service() {
         const val ACTION_STOP_ALARM = "com.pebblephonefinder.android.action.STOP_ALARM"
 
         private const val TAG = "FindPhoneService"
+        // Deliberately keeps its pre-rename value. The ID is never shown to
+        // the user - only the channel's name is, and that follows app_name -
+        // and changing it would create a fresh channel, discarding whatever
+        // the user had configured on the old one.
         private const val NOTIFICATION_CHANNEL_ID = "find_my_phone_alarm"
         private const val NOTIFICATION_ID = 1
     }
@@ -123,7 +127,7 @@ class FindPhoneService : Service() {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(
             PowerManager.PARTIAL_WAKE_LOCK,
-            "FindMyPhoneCompanion:AlarmWakeLock"
+            "PhoneFinder:AlarmWakeLock"
         ).apply {
             setReferenceCounted(false)
             // Safety cap only, in case stop() is somehow never reached (the

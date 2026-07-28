@@ -4,6 +4,32 @@ Working list for the first published release. Nothing here is urgent — the
 debug series (`0.x.y-debug`) is what's in use today; see `release/README.md`
 for the versioning scheme.
 
+## Naming
+
+The app is called **PhoneFinder**. It's treated as a brand name, so it is
+*not* translated — the Norwegian listing and UI say "PhoneFinder" too, while
+the words around it ("PhoneFinder-alarm", "PhoneFinder-alarmlyd") are
+translated normally. Use the same spelling everywhere: one word, capital P
+and F.
+
+Already renamed: the Android `app_name` (both locales), notification title
+and channel name, the Pebble `displayName`, the Gradle project name, the
+theme, the wake-lock tag, `PhoneFinderApplication`, and the text baked into
+both store banners.
+
+- [ ] **0. Decide on the `applicationId`** *(do this before the first
+  upload — it is permanent afterwards)*. It is currently
+  `com.pebblephonefinder.android`, which already reads "phonefinder" and so
+  was left alone. Renaming it now is free but touches the manifest, the
+  Kotlin package, and — easy to miss — the `companionApp.android.apps`
+  package in `watch/package.json`, which is what routes watch messages to
+  the phone. Get that out of sync and the alarm silently stops working.
+  Changing it *after* publishing is impossible: Play treats a new
+  `applicationId` as a different app, losing the listing, installs and
+  reviews. Recommendation: keep it as is.
+- [ ] **0b. Check the name isn't taken** on Google Play and the Rebble
+  appstore before committing to it publicly.
+
 ## Android — Google Play
 
 - [x] **1. Release signing configured.** `app/build.gradle.kts` reads

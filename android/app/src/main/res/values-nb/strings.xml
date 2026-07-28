@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Finn mobilen min</string>
+    <string name="app_name">PhoneFinder</string>
 
     <string name="status_checking">Sjekker Pebble-tilkobling…</string>
     <string name="status_connected">Klokke tilkoblet — trykk på knappen på klokken for å utløse alarmen.</string>
@@ -8,8 +8,8 @@
     <string name="test_alarm_start">Test alarm</string>
     <string name="test_alarm_stop">Stopp testalarm</string>
 
-    <string name="notification_channel_name">Finn mobilen-alarm</string>
-    <string name="notification_title">Finn mobilen</string>
+    <string name="notification_channel_name">PhoneFinder-alarm</string>
+    <string name="notification_title">PhoneFinder</string>
     <string name="notification_text">Spiller alarm — trykk Stopp for å stanse</string>
     <string name="notification_action_stop">Stopp</string>
 
@@ -19,7 +19,7 @@
     <string name="hide_diagnostics">Skjul diagnostikk</string>
 
     <string name="choose_sound">Velg alarmlyd</string>
-    <string name="choose_sound_title">Finn mobilen-alarmlyd</string>
+    <string name="choose_sound_title">PhoneFinder-alarmlyd</string>
     <string name="current_sound">Alarmlyd: %1$s</string>
     <string name="default_sound_name">Standard</string>
     <string name="reset_sound">Tilbakestill til standardlyd</string>

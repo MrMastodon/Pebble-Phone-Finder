@@ -9,13 +9,13 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
-        android:name=".FindMyPhoneApplication"
+        android:name=".PhoneFinderApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.FindMyPhoneCompanion">
+        android:theme="@style/Theme.PhoneFinder">
 
         <activity
             android:name=".MainActivity"

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Generates every icon and banner both apps need, from one shared motif.
 
-Writes in-app assets straight into android/app/src/main/res/, and store
-listing assets into store-assets/. The 25x25 Pebble menu icon has its own
-script (watch/resources/images/generate_icon.py) because at that size it has
-to be hand-placed pixel art rather than a downsampled drawing.
+Writes in-app assets straight into android/app/src/main/res/, the Pebble
+menu icon into watch/resources/images/, and store listing assets into
+store-assets/ - so the watch, the phone and both store listings can't drift
+apart.
 
 Everything is drawn at 4x and downsampled with LANCZOS, so edges are smooth
 at every output size.
@@ -191,7 +191,7 @@ def banner(width, height, subtitle):
     # margin on the right rather than running to the edge.
     text_width = n_w - text_x - margin
 
-    title_font = fitted_font(d, "Find My Phone", text_width, int(n_h * 0.20))
+    title_font = fitted_font(d, "PhoneFinder", text_width, int(n_h * 0.20))
     lines = ["Ring your phone from your Pebble.", "Loud, even on silent."]
 
     if subtitle:
@@ -202,17 +202,17 @@ def banner(width, height, subtitle):
             sub_size -= 1
             sub_font = load_font(sub_size)
 
-        title_h = title_font.getbbox("Find My Phone")[3]
+        title_h = title_font.getbbox("PhoneFinder")[3]
         block_h = title_h + int(n_h * 0.06) + 2 * int(sub_size * 1.25)
         y = (n_h - block_h) // 2
-        d.text((text_x, y), "Find My Phone", font=title_font, fill=WHITE)
+        d.text((text_x, y), "PhoneFinder", font=title_font, fill=WHITE)
         y += title_h + int(n_h * 0.06)
         for line in lines:
             d.text((text_x, y), line, font=sub_font, fill=ORANGE)
             y += int(sub_size * 1.25)
     else:
-        title_h = title_font.getbbox("Find My Phone")[3]
-        d.text((text_x, (n_h - title_h) // 2), "Find My Phone",
+        title_h = title_font.getbbox("PhoneFinder")[3]
+        d.text((text_x, (n_h - title_h) // 2), "PhoneFinder",
                font=title_font, fill=WHITE)
 
     return img.resize((width, height), Image.LANCZOS).convert("RGB")

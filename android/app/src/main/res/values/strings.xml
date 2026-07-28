@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Find My Phone Companion</string>
+    <string name="app_name">PhoneFinder</string>
 
     <string name="status_checking">Checking Pebble connection…</string>
     <string name="status_connected">Watch connected — press the button on your watch to sound the alarm.</string>
@@ -8,8 +8,8 @@
     <string name="test_alarm_start">Test alarm</string>
     <string name="test_alarm_stop">Stop test alarm</string>
 
-    <string name="notification_channel_name">Find My Phone alarm</string>
-    <string name="notification_title">Find My Phone</string>
+    <string name="notification_channel_name">PhoneFinder alarm</string>
+    <string name="notification_title">PhoneFinder</string>
     <string name="notification_text">Playing alarm — tap Stop to silence</string>
     <string name="notification_action_stop">Stop</string>
 
@@ -19,7 +19,7 @@
     <string name="hide_diagnostics">Hide diagnostics</string>
 
     <string name="choose_sound">Choose alarm sound</string>
-    <string name="choose_sound_title">Find My Phone alarm sound</string>
+    <string name="choose_sound_title">PhoneFinder alarm sound</string>
     <string name="current_sound">Alarm sound: %1$s</string>
     <string name="default_sound_name">Default</string>
     <string name="reset_sound">Reset to default sound</string>

@@ -1,14 +1,14 @@
 {
-  "name": "find-my-phone",
+  "name": "phonefinder",
   "author": "MrMastodon",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "keywords": [
     "pebble-app"
   ],
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "Find My Phone",
+    "displayName": "PhoneFinder",
     "uuid": "2cec5357-9346-45f1-926e-2af0b79cb149",
     "sdkVersion": "3",
     "targetPlatforms": [

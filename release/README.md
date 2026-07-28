@@ -18,14 +18,25 @@ to everything here.
   debug-keystore build) start a fresh series at `1.0.0`, independent of
   wherever the debug series was left off.
 
-## Current build: `0.14.0-debug`
+## Current build: `0.15.0-debug`
 
 | File | What it is | Install with |
 |------|------------|---------------|
-| `find-my-phone-watch-v0.14.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> find-my-phone-watch-v0.14.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
-| `find-my-phone-companion-v0.14.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install find-my-phone-companion-v0.14.0-debug.apk` |
+| `phonefinder-watch-v0.15.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> phonefinder-watch-v0.15.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
+| `phonefinder-companion-v0.15.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install phonefinder-companion-v0.15.0-debug.apk` |
 
-`0.14.0-debug` replaces every placeholder icon. The Android launcher
+`0.15.0-debug` renames the app to **PhoneFinder**. It's treated as a
+brand name, so it stays English in the Norwegian UI too, while the words
+around it are still translated ("PhoneFinder-alarm"). The rename covers
+the launcher label, notification title and channel name, the watch's
+`displayName`, the text baked into both store banners, and these release
+filenames. Two things deliberately keep their old values: the
+`applicationId` (`com.pebblephonefinder.android`, which already reads
+"phonefinder" and is permanent once published) and the notification
+channel *ID* (changing it would discard the user's channel settings).
+See `docs/RELEASE.md`.
+
+`0.14.0-debug` replaced every placeholder icon. The Android launcher
 icon and the notification icon were both system drawables - not
 publishable, and the notification one wasn't even a proper
 white-on-transparent silhouette. Both are now generated, along with the
@@ -93,8 +104,8 @@ new features, but several crash and stuck-state paths closed:
 ### SHA-256 checksums
 
 ```
-f99a6686a6a27a4f340c9a03397bb6eaccc89a61161a1189c984cd77d8155dc2  find-my-phone-watch-v0.14.0-debug.pbw
-9b14ccc9152cc4b716c1a31ff5289c8852be1bd251b07936eefeaae9999673bd  find-my-phone-companion-v0.14.0-debug.apk
+0219f1f6ee44dcbb90d755c809c1063202c1916d8166f9981c2701d1b2129f75  phonefinder-watch-v0.15.0-debug.pbw
+4291ac3bff37fc67c16cd3c8e72b2c03f8f85a301af0c5feb3b408c0fc5ec807  phonefinder-companion-v0.15.0-debug.apk
 ```
 
 Both were built and verified in this repo's CI-less sandbox environment
