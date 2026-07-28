@@ -95,8 +95,10 @@ another `res/values-<code>/strings.xml`.
 ### About screen and on-device diagnostics
 
 The phone app has an "About" button on the main screen that opens
-`AboutActivity` — app name/version, a "Developed by MrMastodon" credit,
-and a "Show diagnostics" button (hidden by default) that reveals a log of
+`AboutActivity` — app name/version, a "Developed by MrMastodon" credit, a
+"Buy me a coffee" button (opens the developer's PayPal.me page in the
+browser), and a "Show diagnostics" button (hidden by default) that reveals
+a log of
 every `PebbleListenerService` callback received — app opened/closed, any
 message, even for a UUID that isn't ours — with timestamps, persisted
 across app restarts. It's kept off the main screen so it's out of the way

@@ -27,4 +27,5 @@
     <string name="about">About</string>
     <string name="about_version">Version %1$s</string>
     <string name="developed_by">Developed by MrMastodon</string>
+    <string name="buy_me_coffee">Buy me a coffee</string>
 </resources>

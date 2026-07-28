@@ -30,6 +30,16 @@
         android:text="@string/developed_by" />
 
     <Button
+        android:id="@+id/buyMeCoffeeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#FFD140"
+        android:textColor="#000000"
+        android:text="@string/buy_me_coffee" />
+
+    <Button
         android:id="@+id/toggleDiagnosticsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
