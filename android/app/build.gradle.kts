@@ -40,8 +40,8 @@ android {
         // every new debug build we ship, e.g. 0.1.0 -> 0.2.0). The first
         // real release build starts a fresh series at 1.0.0, independent of
         // wherever the debug series was left. See release/README.md.
-        versionCode = 15
-        versionName = "0.15.0-debug"
+        versionCode = 16
+        versionName = "0.16.0-debug"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -59,7 +59,11 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            // Resource shrinking stays off: this app is small, and it strips
+            // resources it can't see referenced, which fails at runtime
+            // rather than at build time. Not worth the risk for the saving.
+            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             if (hasReleaseSigning) {
                 signingConfig = signingConfigs.getByName("release")

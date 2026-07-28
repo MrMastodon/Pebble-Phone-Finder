@@ -18,14 +18,22 @@ to everything here.
   debug-keystore build) start a fresh series at `1.0.0`, independent of
   wherever the debug series was left off.
 
-## Current build: `0.15.0-debug`
+## Current build: `0.16.0-debug`
 
 | File | What it is | Install with |
 |------|------------|---------------|
-| `phonefinder-watch-v0.15.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> phonefinder-watch-v0.15.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
-| `phonefinder-companion-v0.15.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install phonefinder-companion-v0.15.0-debug.apk` |
+| `phonefinder-watch-v0.16.0-debug.pbw` | Pebble watchapp, `emery` platform only (Pebble Time 2 / Core Time 2) | `pebble install --phone <ip> phonefinder-watch-v0.16.0-debug.pbw`, or sideload through the Pebble app the same way you'd install any `.pbw` |
+| `phonefinder-companion-v0.16.0-debug.apk` | Android companion app, **debug build** (not signed for release/Play Store) | Sideload directly, or `adb install phonefinder-companion-v0.16.0-debug.apk` |
 
-`0.15.0-debug` renames the app to **PhoneFinder**. It's treated as a
+`0.16.0-debug` turns on R8 for the **release** build type — which means
+the debug APK here is unchanged by it and cannot be used to test it. The
+release APK drops from 5.7 MB to 2.3 MB. Keep rules were written against
+what the dependencies actually need: the important one preserves all of
+`io.rebble.pebblekit2.**`, because it ships no consumer rules of its own
+and talks to the Pebble app over AIDL and Parcelables resolved by class
+name. See `docs/RELEASE.md` for what was verified.
+
+`0.15.0-debug` renamed the app to **PhoneFinder**. It's treated as a
 brand name, so it stays English in the Norwegian UI too, while the words
 around it are still translated ("PhoneFinder-alarm"). The rename covers
 the launcher label, notification title and channel name, the watch's
@@ -104,8 +112,8 @@ new features, but several crash and stuck-state paths closed:
 ### SHA-256 checksums
 
 ```
-0219f1f6ee44dcbb90d755c809c1063202c1916d8166f9981c2701d1b2129f75  phonefinder-watch-v0.15.0-debug.pbw
-4291ac3bff37fc67c16cd3c8e72b2c03f8f85a301af0c5feb3b408c0fc5ec807  phonefinder-companion-v0.15.0-debug.apk
+1eda97296fba6569248d9b479b587307235f4e5b1365c935025c9089f3fa2da9  phonefinder-watch-v0.16.0-debug.pbw
+e5889f670a617c9ad83e32b7b1f9a578cd0966c56bdbc9fd986b5914dcce8682  phonefinder-companion-v0.16.0-debug.apk
 ```
 
 Both were built and verified in this repo's CI-less sandbox environment

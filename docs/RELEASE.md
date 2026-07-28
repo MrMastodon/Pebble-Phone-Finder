@@ -58,11 +58,31 @@ script rather than hand-editing any output.
 
 - [ ] **3. Generate the upload key** and back it up. **[you]** — it's a
   credential you must own; see the warning below.
-- [ ] **4. Decide on R8/minify.** **[here]**, then **[you]** to retest.
-  Currently `isMinifyEnabled = false`. Enabling it needs
-  `proguard-rules.pro` checked against PebbleKitAndroid2 and DataStore
-  (both use reflection/serialization), and the result retested on a real
-  device — a missing keep rule fails at runtime, not at build time.
+- [x] **4a. R8/minify enabled**, with rules written against what the
+  dependencies actually need rather than guesswork. Release APK went from
+  5.7 MB to 2.3 MB. Resource shrinking is deliberately left off — it strips
+  resources it can't see referenced, and fails at runtime rather than at
+  build time, which isn't worth it for an app this size.
+
+  The load-bearing rule keeps all of `io.rebble.pebblekit2.**`. Neither of
+  its AARs ships a consumer `proguard.txt`, and the library's whole job is
+  IPC with a separate app across AIDL stubs and Parcelables that are
+  resolved by class name. Renaming those on our side while the Pebble app
+  uses the originals fails silently at runtime — the exact failure mode
+  this project already lost a debugging round to.
+
+  Verified from `mapping.txt`: all 10 AIDL/Parcel classes and all 6 of our
+  manifest components kept their names; the only 4 renamed are
+  compiler-generated `$$ExternalSyntheticLambda` artifacts, which are never
+  looked up by name. Resources, the alarm sound and the `nb` locale all
+  survive (release builds shorten resource *file paths*, but the resource
+  table keeps the real names — checked with `aapt2 dump resources`).
+- [ ] **4b. Test a minified build on the watch + phone.** **[you]** — this
+  is the part no amount of static checking replaces. Note that the debug
+  APKs in `release/` do **not** go through R8, so testing those proves
+  nothing about it: build a signed release (`gradle assembleRelease` once
+  you have your key) and exercise the full round trip, especially the watch
+  button, since that's the path through the kept IPC classes.
 - [ ] **5. Privacy policy — needs hosting.** **[you]** The text is written:
   [`docs/privacy-policy.md`](privacy-policy.md), saying exactly *"The
   application PhoneFinder does not collect or share any user data."* in
