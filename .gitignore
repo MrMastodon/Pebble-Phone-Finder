@@ -5,6 +5,11 @@ watch/.pebble-cache/
 watch/*.pbw
 watch/.lock-waf_linux_build
 
+# Signing credentials - must never be committed
+android/keystore.properties
+*.jks
+*.keystore
+
 # Android / Gradle
 android/local.properties
 android/.gradle/

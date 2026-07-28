@@ -259,7 +259,16 @@ watch, phone, and the official Pebble app; see Known limitations below.
 
 ```
 docs/PROTOCOL.md   Shared UUID + AppMessage key/value contract
+docs/RELEASE.md    Checklist for publishing to Play / the Rebble appstore
 watch/              Pebble C watchapp (pebble-tool project, emery only)
 android/            Android companion app (Gradle project)
 release/            Prebuilt .pbw / .apk, with checksums (see release/README.md)
 ```
+
+## Publishing
+
+See `docs/RELEASE.md` for the release checklist and for how release signing
+is wired up. Short version: put your keystore credentials in
+`android/keystore.properties` (gitignored — copy the `.example`) or in
+`FMP_*` environment variables, then `gradle bundleRelease`. Without
+credentials the release build is left unsigned rather than failing.

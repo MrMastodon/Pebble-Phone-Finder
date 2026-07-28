@@ -1,7 +1,32 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
+
+// Release signing credentials. The keystore and its passwords must never be
+// committed: put them in android/keystore.properties (gitignored - copy
+// keystore.properties.example), or supply them as environment variables for
+// CI. With neither present the release build is simply left unsigned, so
+// `assembleRelease` still works for anyone without the key.
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties().apply {
+    if (keystorePropertiesFile.exists()) {
+        keystorePropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+fun signingSetting(propertyName: String, envName: String): String? =
+    (keystoreProperties.getProperty(propertyName) ?: System.getenv(envName))
+        ?.takeIf { it.isNotBlank() }
+
+val releaseStoreFile = signingSetting("storeFile", "FMP_STORE_FILE")
+val releaseStorePassword = signingSetting("storePassword", "FMP_STORE_PASSWORD")
+val releaseKeyAlias = signingSetting("keyAlias", "FMP_KEY_ALIAS")
+val releaseKeyPassword = signingSetting("keyPassword", "FMP_KEY_PASSWORD")
+val hasReleaseSigning = releaseStoreFile != null && releaseStorePassword != null &&
+    releaseKeyAlias != null && releaseKeyPassword != null
 
 android {
     namespace = "com.pebblephonefinder.android"
@@ -21,10 +46,29 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = rootProject.file(releaseStoreFile!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                logger.lifecycle(
+                    "No release signing credentials found - the release build will be unsigned. " +
+                        "See android/keystore.properties.example."
+                )
+            }
         }
     }
 
