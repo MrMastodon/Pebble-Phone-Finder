@@ -101,12 +101,12 @@ script rather than hand-editing any output.
   `docs/index.html` is a small landing page so the Pages root isn't a 404;
   use it for the "website" field in both store listings.
 
-  **The URL depends on which source you picked in Settings → Pages:**
-
-  | Pages source | Privacy policy URL |
-  |---|---|
-  | Branch + `/docs` folder | `https://mrmastodon.github.io/Pebble-Phone-Finder/privacy-policy.html` |
-  | Branch + `/` root | `https://mrmastodon.github.io/Pebble-Phone-Finder/docs/privacy-policy.html` |
+  **Live at**
+  <https://mrmastodon.github.io/Pebble-Phone-Finder/privacy-policy.html>
+  (Pages is serving from the `/docs` folder). Verified returning 200 with
+  the right content and no external resources. The landing page at
+  <https://mrmastodon.github.io/Pebble-Phone-Finder/> is the URL for the
+  "website" field in both store listings.
 
   Open it in a private window before pasting it into Play — that confirms
   it's reachable without being logged in, which is the thing reviewers
