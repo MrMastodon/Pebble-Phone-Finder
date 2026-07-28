@@ -164,6 +164,29 @@ along with the other declarations Play asks for along the way (ads, IAP,
 app access, category) and a note on the 12-tester closed-testing rule that
 gates production access for personal developer accounts.
 
+- [x] **Play's "no debug symbols" warning — investigated, nothing to fix.**
+  Uploading the bundle raises *"This App Bundle contains native code, and
+  you've not uploaded debug symbols."* It's advisory, not a blocker, and it
+  can't be satisfied.
+
+  The only native code is `libdatastore_shared_counter.so`, a 7 KB library
+  DataStore pulls in — nothing in this project is written in C or C++. The
+  `.so` inside DataStore's AAR arrives **already stripped**: `readelf`
+  shows no `.symtab` and no `.debug_*` sections, only a `.dynsym` with nine
+  defined functions.
+
+  `ndk { debugSymbolLevel = "FULL" }` was tried and reverted.
+  `extractReleaseNativeDebugMetadata` runs, produces an empty output
+  directory, and no `debugsymbols` entry appears in the bundle's
+  `BUNDLE-METADATA` — the bundle comes out the same size to the byte. There
+  are no symbols to extract, so the warning stands either way. The setting
+  is left out rather than kept as a no-op that would read as if symbols
+  were being uploaded.
+
+  Consequence if it ever matters: a crash inside those nine functions would
+  symbolicate from `.dynsym` alone — function names, no line numbers. For
+  an app whose native surface is a shared counter used by a settings store,
+  that's fine.
 - [ ] **11. Play Console — foreground service declaration.** **[you]** The
   app declares the `mediaPlayback` foreground service type; Play asks for a
   justification and usually a demo video showing the alarm start and stop.

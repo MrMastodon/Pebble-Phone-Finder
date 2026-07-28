@@ -65,6 +65,15 @@ android {
             // rather than at build time. Not worth the risk for the saving.
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // No ndk.debugSymbolLevel here on purpose. Play warns that the
+            // bundle has native code without debug symbols; the native code
+            // is one 7 KB library that DataStore pulls in, and the .so in
+            // its AAR is already stripped. Setting debugSymbolLevel = "FULL"
+            // was tried: extractReleaseNativeDebugMetadata runs and produces
+            // an empty directory, the bundle is byte-for-byte the same size,
+            // and no debugsymbols entry appears in BUNDLE-METADATA. It would
+            // only add a task that suggests symbols are being uploaded when
+            // none are. See docs/RELEASE.md.
             if (hasReleaseSigning) {
                 signingConfig = signingConfigs.getByName("release")
             } else {
