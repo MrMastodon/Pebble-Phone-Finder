@@ -23,6 +23,9 @@ LIMITS = {
     "Kort beskrivelse": 80,
     "Full description": 4000,
     "Fullstendig beskrivelse": 4000,
+    # The "What's new" field, per language, per release.
+    "Release notes": 500,
+    "Versjonsnotater": 500,
 }
 
 

@@ -118,10 +118,12 @@ script rather than hand-editing any output.
   the page — add it yourself if you want it published.
 - [x] **6. Store listing copy** — written, ready to paste:
   [`store-assets/listing-copy.md`](../store-assets/listing-copy.md). Title,
-  short and full description for Play in both en-US and nb-NO, plus a
-  shorter watch-first description for Rebble. Verified against Play's
-  30/80/4000 limits by `tools/check_listing_copy.py`; re-run it if you edit
-  the text. **[you]** to paste in and to decide on the title question noted
+  short and full description, and the "What's new" release notes for Play in
+  both en-US and nb-NO, plus a shorter watch-first description and changelog
+  for Rebble. Verified against Play's 30/80/4000/500 limits by
+  `tools/check_listing_copy.py`; re-run it if you edit the text. Note that
+  the release notes are per *release*, not per app — they need rewriting at
+  each version, unlike the rest of the listing. **[you]** to paste in and to decide on the title question noted
   at the top of that file (whether to risk "PhoneFinder for Pebble" for
   the extra search term).
 - [x] **7. Screenshots captured** on real hardware. They go straight into

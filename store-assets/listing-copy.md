@@ -2,8 +2,14 @@
 
 Ready to paste into Google Play Console and the Rebble developer portal.
 Play's limits are title ≤ 30, short description ≤ 80, full description
-≤ 4000 characters; `tools/check_listing_copy.py` verifies every field here
-against them.
+≤ 4000 and release notes ≤ 500 characters; `tools/check_listing_copy.py`
+verifies every field here against them.
+
+The **release notes** are Play's "What's new" field. Unlike the rest of the
+listing they belong to a *release*, not to the app, and are entered per
+language when you roll one out — so this section needs rewriting for every
+version, while everything else above it can stay put. Rebble's changelog
+field is the equivalent there, at the bottom of this file.
 
 "PhoneFinder" is a brand name and stays untranslated in the Norwegian
 listing — see `docs/RELEASE.md`.
@@ -69,6 +75,19 @@ Do Not Disturb set to total silence is enforced by Android itself, and no ordina
 Some manufacturers are aggressive about closing background apps. If the alarm doesn't reliably fire, allow PhoneFinder to run unrestricted in your battery settings.
 ```
 
+### Release notes
+```
+First release.
+
+PhoneFinder rings your phone from your Pebble watch, through the phone's alarm channel at full volume — so it's loud even when the phone is on silent.
+
+• Press the middle button on the watch to start, press it again to stop
+• Or tap Stop on the notification that appears on the phone
+• Choose any of your phone's built-in alarm sounds
+• The watch screen shows whether it's connected to your phone
+• English and Norwegian
+```
+
 ---
 
 ## Google Play — Norsk (nb-NO)
@@ -120,6 +139,19 @@ VERDT Å VITE
 «Ikke forstyrr» satt til total stillhet håndheves av Android selv, og ingen vanlig app kan overstyre det. I den modusen spiller PhoneFinder på det volumet systemet tillater.
 
 Enkelte produsenter er aggressive med å lukke apper i bakgrunnen. Hvis alarmen ikke utløses pålitelig, gi PhoneFinder lov til å kjøre uten begrensninger i batteriinnstillingene.
+```
+
+### Versjonsnotater
+```
+Første versjon.
+
+PhoneFinder ringer telefonen fra Pebble-klokken, gjennom telefonens alarmkanal på fullt volum — så den høres selv om telefonen står på lydløs.
+
+• Trykk midtknappen på klokken for å starte, trykk igjen for å stoppe
+• Eller trykk Stopp på varselet som dukker opp på telefonen
+• Velg hvilken som helst av telefonens innebygde alarmlyder
+• Klokkeskjermen viser om den er tilkoblet telefonen
+• Norsk og engelsk
 ```
 
 ---
