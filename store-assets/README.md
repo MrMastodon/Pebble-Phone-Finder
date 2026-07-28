@@ -13,6 +13,16 @@ That script also writes the in-app assets — the Android launcher and
 notification icons under `android/app/src/main/res/`, and the Pebble menu
 icon at `watch/resources/images/icon.png` — so don't hand-edit those either.
 
+## Preview
+
+| | |
+|---|---|
+| <img src="play/icon-512.png" width="120"> | Launcher / listing icon — the same motif backs the Android adaptive icon, the Rebble listing icons and the 25×25 Pebble menu icon |
+
+![Play feature graphic](play/feature-graphic-1024x500.png)
+
+![Rebble banner](rebble/banner-720x320.png)
+
 ## Google Play (`play/`)
 
 | File | Size | Notes |

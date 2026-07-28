@@ -81,7 +81,8 @@ something fixable from this project's side.
 
 That icon, the Android launcher and notification icons, and both stores'
 listing assets are all generated from one motif by
-`tools/generate_assets.py` — see `store-assets/README.md`. Don't hand-edit
+`tools/generate_assets.py` — browse them in
+[`store-assets/`](store-assets/), which previews each one. Don't hand-edit
 the outputs; change the script and re-run it.
 
 ### Localization
